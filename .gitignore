@@ -238,6 +238,27 @@ playwright/.auth/
 _bmad/
 _bmad-output/
 
+# Internal development files (not for public)
+gen.py
+CODEBASE_ANALYSIS_REPORT.md
+CODEBASE_STRUCTURE.md
+NAVIGATION.md
+PRE_PUSH_CHECKLIST.md
+QUICK_PUSH_GUIDE.md
+verify-for-github.ps1
+
+# Internal development docs
+docs/REORGANIZATION_SUMMARY.md
+docs/SEARXNG_UPDATE_SUMMARY.md
+docs/backend/BACKEND_COMPLETE.md
+docs/backend/BACKEND_DEEP_ANALYSIS.md
+docs/backend/TODO_BACKEND_REMEDIATION.md
+docs/backend/INTEGRATION_SUMMARY.md
+docs/deployment/OPENSOURCE_DELIVERY.md
+docs/deployment/OPENSOURCE_READY.md
+docs/deployment/GITHUB_SETUP.md
+docs/troubleshooting/DIOGENES_ERROR_ANALYSIS_REPORT.md
+
 # Gemini integration (if any)
 .gemini/
 

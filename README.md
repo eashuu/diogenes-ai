@@ -12,7 +12,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
 
-[Features](#-features) • [Demo](#-demo) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing) • [Navigation →](NAVIGATION.md)
+[Features](#-features) • [Demo](#-demo) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
 </div>
 
@@ -214,17 +214,6 @@ npm run dev
 
 Navigate to `http://localhost:5173` and start researching!
 
-### ✅ Repository Status
-
-This codebase has been analyzed and is **production-ready** with comprehensive security checks:
-- ✅ No hardcoded secrets or API keys
-- ✅ Proper `.gitignore` configuration
-- ✅ All sensitive data protected
-- ✅ Professional structure and documentation
-
-📄 See [CODEBASE_ANALYSIS_REPORT.md](CODEBASE_ANALYSIS_REPORT.md) for full analysis  
-🚀 See [QUICK_PUSH_GUIDE.md](QUICK_PUSH_GUIDE.md) for GitHub deployment
-
 ---
 
 ## 📚 Documentation
@@ -341,11 +330,8 @@ Comprehensive documentation is available in the [docs/](docs/) directory:
 
 ### 🚀 For Deployment
 - **[Deployment Guide](docs/deployment/DEPLOYMENT.md)** - Production deployment instructions
-- **[GitHub Setup](docs/deployment/GITHUB_SETUP.md)** - Repository configuration
-- **[Open Source Checklist](docs/deployment/OPENSOURCE_READY.md)** - Compliance and readiness
 
 ### 🐛 Troubleshooting
-- **[Error Analysis](docs/troubleshooting/DIOGENES_ERROR_ANALYSIS_REPORT.md)** - Common issues
 - **[Windows Compatibility](docs/troubleshooting/WINDOWS_COMPATIBILITY.md)** - Windows-specific fixes
 - **[Windows Crawling Fix](docs/troubleshooting/WINDOWS_CRAWLING_FIX.md)** - Playwright on Windows
 
@@ -413,7 +399,7 @@ diogenes/
 └── scripts/               # Utility scripts
 ```
 
-📖 **See [CODEBASE_STRUCTURE.md](CODEBASE_STRUCTURE.md) for detailed structure documentation.**
+
 
 ---
 

@@ -26,20 +26,12 @@ Welcome to the Diogenes documentation hub! This directory contains comprehensive
 - [Research Modes](guides/MODES.md) - Understanding different research modes and profiles
 
 ### 🔧 Backend Development
-- [Backend Complete](backend/BACKEND_COMPLETE.md) - Backend implementation status
-- [Backend Deep Analysis](backend/BACKEND_DEEP_ANALYSIS.md) - In-depth backend analysis
 - [Frontend-Backend Integration](backend/FRONTEND_BACKEND_INTEGRATION.md) - Integration guide
-- [Integration Summary](backend/INTEGRATION_SUMMARY.md) - Integration overview
-- [Backend Remediation TODO](backend/TODO_BACKEND_REMEDIATION.md) - Outstanding backend tasks
 
 ### 🚀 Deployment
 - [Deployment Guide](deployment/DEPLOYMENT.md) - How to deploy Diogenes
-- [GitHub Setup](deployment/GITHUB_SETUP.md) - Setting up GitHub repository
-- [Open Source Delivery](deployment/OPENSOURCE_DELIVERY.md) - Delivery checklist
-- [Open Source Ready](deployment/OPENSOURCE_READY.md) - Open source compliance
 
 ### 🐛 Troubleshooting
-- [Error Analysis Report](troubleshooting/DIOGENES_ERROR_ANALYSIS_REPORT.md) - Common errors and solutions
 - [Windows Compatibility](troubleshooting/WINDOWS_COMPATIBILITY.md) - Windows-specific issues
 - [Windows Crawling Fix](troubleshooting/WINDOWS_CRAWLING_FIX.md) - Fixing crawling on Windows
 
@@ -65,8 +57,6 @@ Welcome to the Diogenes documentation hub! This directory contains comprehensive
 
 ### For Deployment
 1. Follow [Deployment Guide](deployment/DEPLOYMENT.md)
-2. Review [GitHub Setup](deployment/GITHUB_SETUP.md)
-3. Check [Open Source Checklist](deployment/OPENSOURCE_READY.md)
 
 ### For Troubleshooting
 1. Check [Error Analysis](troubleshooting/DIOGENES_ERROR_ANALYSIS_REPORT.md)
