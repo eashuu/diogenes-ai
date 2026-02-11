@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # SearXNG - Privacy-focused meta search engine
+  searxng:
+    build:
+      context: ./searxng
+      dockerfile: Dockerfile
+    image: diogenes-searxng:latest
+    container_name: diogenes-searxng
+    ports:
+      - "8080:8080"
+    environment:
+      - BASE_URL=http://localhost:8080/
+      - INSTANCE_NAME=Diogenes Search
+    networks:
+      - diogenes-network
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  # Ollama - Local LLM inference (optional)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: diogenes-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    networks:
+      - diogenes-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - with-ollama
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
+
+networks:
+  diogenes-network:
+    driver: bridge

@@ -1,0 +1,32 @@
+# Diogenes Development Configuration
+# Inherits from default.yaml with development-specific overrides
+
+environment: "development"
+
+api:
+  debug: true
+
+logging:
+  level: "DEBUG"
+
+# Use gpt-oss:20b-cloud for better quality in development testing
+llm:
+  timeout: 300.0  # 5 minutes for slower cloud models
+  models:
+    planner: "gpt-oss:20b-cloud"
+    extractor: "gpt-oss:20b-cloud"
+    synthesizer: "gpt-oss:20b-cloud"
+    reflector: "gpt-oss:20b-cloud"
+
+# Increase crawl timeout to handle slow sites
+crawl:
+  timeout: 60.0  # Increased from 30s default for Playwright navigation
+
+# Shorter cache TTLs for development
+cache:
+  provider: "sqlite"
+  database: "data/cache.db"
+
+session:
+  provider: "sqlite"
+  database: "data/sessions.db"

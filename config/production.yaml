@@ -1,0 +1,34 @@
+# Diogenes Production Configuration
+# Optimized for performance and reliability
+
+environment: "production"
+
+api:
+  debug: false
+  cors_origins:
+    - "https://your-domain.com"
+
+logging:
+  level: "INFO"
+  file: "logs/diogenes.log"
+
+# Use larger models in production for better quality
+llm:
+  models:
+    synthesizer: "llama3.1:70b"
+    reflector: "llama3.1:70b"
+  timeout: 180.0
+
+# Longer cache TTLs for production
+cache:
+  provider: "sqlite"
+  database: "data/cache.db"
+
+session:
+  provider: "sqlite"
+  database: "data/sessions.db"
+  ttl: 604800  # 7 days
+
+agent:
+  max_iterations: 3
+  coverage_threshold: 0.75

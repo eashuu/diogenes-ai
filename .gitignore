@@ -1,0 +1,320 @@
+# ============================================
+# Diogenes .gitignore
+# ============================================
+
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+env.bak/
+venv.bak/
+
+# Testing
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+.hypothesis/
+pytestdebug.log
+*.cover
+*.py,cover
+nosetests.xml
+coverage.xml
+
+# Profiling
+*.prof
+
+# ============================================
+# Environment Variables & Secrets
+# ============================================
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+
+# Never commit any files with these extensions
+*.key
+*.pem
+*.crt
+*.p12
+*.pfx
+*.der
+secrets/
+credentials/
+*.secret
+
+# ============================================
+# Data & Databases
+# ============================================
+data/
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+cache/
+*.log
+logs/
+research_data.json
+
+# ChromaDB
+chromadb/
+chroma.sqlite3
+
+# ============================================
+# Frontend (Node.js / React / Vite)
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+.next/
+out/
+
+# Frontend environment
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+frontend/.env.local
+frontend/.env.*.local
+frontend/coverage/
+
+# Vite
+.vite/
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# ============================================
+# IDEs & Editors
+# ============================================
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+*.sublime-*
+
+# Vim
+*.swp
+*.swo
+*.swn
+*~
+.netrwhist
+
+# Emacs
+\#*\#
+.\#*
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# ============================================
+# OS Files
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# ============================================
+# Docker
+# ============================================
+.dockerignore.bak
+docker-compose.override.yml
+
+# Don't ignore our custom Dockerfile
+!searxng/Dockerfile
+!searxng/.dockerignore
+
+# ============================================
+# Temporary & Cache Files
+# ============================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.cache
+
+# Playwright browser cache
+playwright/.auth/
+.playwright/
+
+# ============================================
+# Project-Specific
+# ============================================
+
+# BMAD tooling (internal development)
+_bmad/
+_bmad-output/
+
+# Gemini integration (if any)
+.gemini/
+
+# Session and conversation data
+*.session
+conversations/
+
+# Test outputs
+test-results/
+test_*.json
+*_test_output.*
+
+# Research outputs (optional - uncomment if you don't want to track)
+# research_outputs/
+# *.research.json
+
+# ============================================
+# Jupyter Notebook
+# ============================================
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# ============================================
+# Documentation Build
+# ============================================
+docs/_build/
+docs/.doctrees/
+site/
+
+# ============================================
+# Package Managers
+# ============================================
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.yarn/
+.pnp.*
+
+# ============================================
+# Monitoring & Metrics
+# ============================================
+*.metrics
+metrics/
+monitoring/
+
+# ============================================
+# Security Scanning
+# ============================================
+.snyk
+snyk-report.json
+trivy-report.json
+
+# ============================================
+# Allow These Files (Exceptions)
+# ============================================
+!.env.example
+!frontend/.env.example
+!.gitignore
+!.github/
+!.vscode/extensions.json
+
+.github/pull_request_template.md
+.github/ISSUE_TEMPLATE/bug_report.md
+.github/ISSUE_TEMPLATE/documentation.md
+.github/ISSUE_TEMPLATE/feature_request.md
+.github/ISSUE_TEMPLATE/question.md
+.github/agents/bmd-custom-bmm-analyst.agent.md
+.github/agents/bmd-custom-bmm-architect.agent.md
+.github/agents/bmd-custom-bmm-dev.agent.md
+.github/agents/bmd-custom-bmm-pm.agent.md
+.github/agents/bmd-custom-bmm-quick-flow-solo-dev.agent.md
+.github/agents/bmd-custom-bmm-sm.agent.md
+.github/agents/bmd-custom-bmm-tea.agent.md
+.github/agents/bmd-custom-bmm-tech-writer.agent.md
+.github/agents/bmd-custom-bmm-ux-designer.agent.md
+.github/agents/bmd-custom-core-bmad-master.agent.md
+.github/workflows/security.yml
+.github/workflows/tests.yml

@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diogenes AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Base: Diogenes (Red) */
+        --foreground: 255 255 255;
+        --background: 10 0 0; /* Deep red/black */
+        --glass: 0 0 0;
+        --accent: 248 113 113; /* red-400 */
+        --muted-foreground: 160 160 160;
+      }
+
+      [data-theme='light'] {
+        --foreground: 9 9 11; /* zinc-950 */
+        --background: 255 255 255;
+        --glass: 255 255 255;
+        --accent: 37 99 235; /* blue-600 */
+        --muted-foreground: 113 113 122; /* zinc-500 */
+      }
+
+      [data-theme='dark'] {
+        --foreground: 250 250 250; /* zinc-50 */
+        --background: 9 9 11; /* zinc-950 */
+        --glass: 0 0 0;
+        --accent: 255 255 255;
+        --muted-foreground: 161 161 170; /* zinc-400 */
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: rgb(var(--background));
+        color: rgb(var(--foreground));
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(var(--foreground), 0.1);
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(var(--foreground), 0.2);
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              background: 'rgb(var(--background) / <alpha-value>)',
+              foreground: 'rgb(var(--foreground) / <alpha-value>)',
+              glass: 'rgb(var(--glass) / <alpha-value>)',
+              accent: 'rgb(var(--accent) / <alpha-value>)',
+            }
+          }
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "framer-motion": "https://esm.sh/framer-motion@^11.11.11",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "tailwind-merge": "https://esm.sh/tailwind-merge@^3.4.0",
+    "clsx": "https://esm.sh/clsx@^2.1.1",
+    "@paper-design/shaders-react": "https://esm.sh/@paper-design/shaders-react@^0.0.68",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react-markdown": "https://esm.sh/react-markdown@^9.0.1",
+    "remark-gfm": "https://esm.sh/remark-gfm@^4.0.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

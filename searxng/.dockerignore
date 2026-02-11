@@ -1,0 +1,6 @@
+# Ignore everything except what we need
+*
+
+# Include only these files
+!Dockerfile
+!settings.yml

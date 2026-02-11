@@ -1,0 +1,76 @@
+# Diogenes Default Configuration
+# This file contains all default settings for the application.
+# Override with environment-specific configs or environment variables.
+
+app_name: "Diogenes"
+version: "2.0.0"
+environment: "development"
+
+search:
+  provider: "searxng"
+  base_url: "http://localhost:8080"
+  timeout: 20.0
+  max_results: 10
+  cache_ttl: 3600
+  categories:
+    - general
+    - science
+    - it
+  language: "en-US"
+
+crawl:
+  provider: "crawl4ai"
+  max_concurrent: 5
+  timeout: 30.0
+  max_content_length: 500000
+  rate_limit_per_domain: 1.0
+  cache_ttl: 86400
+  user_agent: "DiogenesResearchBot/2.0"
+
+llm:
+  provider: "ollama"
+  base_url: "http://localhost:11434"
+  temperature: 0.0
+  max_tokens: 4096
+  timeout: 120.0
+  models:
+    planner: "qwen2.5:3b"
+    extractor: "qwen2.5:3b"
+    synthesizer: "llama3.1:8b"
+    reflector: "llama3.1:8b"
+
+processing:
+  chunk_size: 512
+  chunk_overlap: 64
+  min_chunk_size: 100
+  max_chunks_per_source: 20
+  max_total_context: 32000
+
+cache:
+  provider: "sqlite"
+  database: "data/cache.db"
+
+session:
+  provider: "sqlite"
+  database: "data/sessions.db"
+  ttl: 86400
+
+agent:
+  max_iterations: 3
+  min_sources: 3
+  max_sources: 8
+  coverage_threshold: 0.7
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:5173"
+    - "http://127.0.0.1:5173"
+  debug: false
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  file: null
