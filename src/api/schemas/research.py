@@ -54,6 +54,15 @@ class ResearchRequest(BaseModel):
         default=True,
         description="Whether to stream results via SSE"
     )
+    profile: str = Field(
+        default="general",
+        pattern="^(general|academic|technical|news|medical|legal)$",
+        description="Research perspective profile"
+    )
+    file_ids: list[str] = Field(
+        default_factory=list,
+        description="IDs of uploaded files to include as RAG context"
+    )
     
     @field_validator('query')
     @classmethod
@@ -301,6 +310,14 @@ class SSEEventType(str, Enum):
     COMPLETE = "complete"
     ERROR = "error"
     HEARTBEAT = "heartbeat"
+    # Structured message blocks (Perplexica-style)
+    MESSAGE_START = "messageStart"
+    MESSAGE_END = "messageEnd"
+    TEXT_CHUNK = "textChunk"
+    SOURCE_BLOCK = "sourceBlock"
+    CITATION_BLOCK = "citationBlock"
+    IMAGE_BLOCK = "imageBlock"
+    WIDGET_BLOCK = "widgetBlock"
 
 
 class SSEEvent(BaseModel):

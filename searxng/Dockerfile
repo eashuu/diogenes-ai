@@ -16,9 +16,6 @@ EXPOSE 8080
 ENV BASE_URL=http://localhost:8080/
 ENV INSTANCE_NAME="Diogenes Search"
 
-# Health check
+# Health check using wget (available in Alpine-based images)
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-    CMD curl -f http://localhost:8080/ || exit 1
-
-# Start SearXNG
-CMD ["python", "/usr/local/searxng/searx/webapp.py"]
+    CMD wget -q --spider http://localhost:8080/ || exit 1

@@ -1,342 +1,150 @@
 # Contributing to Diogenes
 
-First off, thank you for considering contributing to Diogenes! It's people like you that make Diogenes such a great tool for the research community.
+Thanks for your interest in contributing! This guide will get you set up.
 
-## Table of Contents
+## Quick Steps
 
-- [Code of Conduct](#code-of-conduct)
-- [How Can I Contribute?](#how-can-i-contribute)
-- [Development Setup](#development-setup)
-- [Pull Request Process](#pull-request-process)
-- [Coding Standards](#coding-standards)
-- [Testing Guidelines](#testing-guidelines)
-- [Documentation](#documentation)
-
-## Code of Conduct
-
-This project and everyone participating in it is governed by the [Diogenes Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
-
-## How Can I Contribute?
-
-### Reporting Bugs
-
-Before creating bug reports, please check the existing issues to avoid duplicates. When you create a bug report, include as many details as possible:
-
-- **Use a clear and descriptive title**
-- **Describe the exact steps to reproduce the problem**
-- **Provide specific examples** (screenshots, code snippets, logs)
-- **Describe the behavior you observed** and what you expected
-- **Include environment details** (OS, Python version, Node version, etc.)
-
-Use the bug report template when creating an issue.
-
-### Suggesting Enhancements
-
-Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion:
-
-- **Use a clear and descriptive title**
-- **Provide a detailed description** of the suggested enhancement
-- **Explain why this enhancement would be useful**
-- **List any alternatives** you've considered
-
-### Your First Code Contribution
-
-Unsure where to begin? You can start by looking through `good-first-issue` and `help-wanted` issues:
-
-- **Good first issues** - issues which should only require a few lines of code
-- **Help wanted issues** - issues which might be more involved
-
-### Pull Requests
-
-1. Fork the repo and create your branch from `main`
-2. If you've added code that should be tested, add tests
-3. If you've changed APIs, update the documentation
-4. Ensure the test suite passes
-5. Make sure your code follows the style guidelines
-6. Issue the pull request!
+1. Fork the repo
+2. `git checkout -b feature/my-feature`
+3. Make changes
+4. Test: `pytest tests/ -v` and `cd frontend && npx tsc --noEmit`
+5. Commit: `git commit -m "feat: add my feature"`
+6. Push and open a PR
 
 ## Development Setup
 
-### Backend Setup
+### Backend
 
 ```bash
-# Clone your fork
 git clone https://github.com/YOUR_USERNAME/diogenes.git
 cd diogenes
-
-# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# Install dependencies (with dev dependencies)
+venv\Scripts\activate             # Windows
+# source venv/bin/activate        # macOS/Linux
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # If available
+pip install -r requirements-dev.txt
 
-# Install pre-commit hooks (recommended)
-pre-commit install
+# Start SearXNG
+docker compose up -d searxng
+
+# Run backend
+python run_api.py
 
 # Run tests
 pytest tests/ -v
 ```
 
-### Frontend Setup
+### Frontend
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Run development server
-npm run dev
-
-# Run linter
-npm run lint
-
-# Run type checker
-npm run type-check
+npm run dev          # Dev server on http://localhost:5173
+npx tsc --noEmit     # Type check
+npm run build        # Production build
 ```
 
-### Docker Setup (Optional)
+### Docker (full stack)
 
 ```bash
-# Start all services
-docker-compose up -d
+docker compose up -d
+```
 
-# View logs
-docker-compose logs -f
+## What to Work On
 
-# Stop services
-docker-compose down
+- **Bugs**: Check [Issues](https://github.com/yourusername/diogenes/issues) labeled `bug`
+- **Good first issues**: Look for `good-first-issue` label
+- **Features**: Discuss in an issue first before starting large features
+
+## Coding Standards
+
+### Python
+
+- Follow PEP 8 (100 char line limit)
+- Use type hints on function signatures
+- Use Google-style docstrings for public functions
+- Format with `black src/ tests/`
+- Sort imports with `isort src/ tests/`
+- Lint with `ruff check src/`
+
+### TypeScript
+
+- Strict TypeScript — no `any` unless unavoidable
+- Define interfaces for data structures
+- Functional components with hooks
+- Tailwind CSS for styling (no custom CSS unless necessary)
+
+### Commits
+
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+feat: add stock widget
+fix: handle empty search results
+docs: update API specification
+refactor: simplify chunker logic
+test: add widget API tests
 ```
 
 ## Pull Request Process
 
-1. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
+1. Your PR description should explain **what** changed and **why**
+2. Link the related issue if one exists
+3. Make sure CI passes (lint, type check, tests, build)
+4. Keep PRs focused — one feature or fix per PR
+5. Update docs if you changed APIs or added features
 
-2. **Make your changes**
-   - Write clear, concise commit messages
-   - Follow the coding standards below
-   - Add tests for new functionality
+## Project Structure
 
-3. **Test your changes**
-   ```bash
-   # Backend
-   pytest tests/ -v
-   
-   # Frontend
-   npm test
-   ```
+See [NAVIGATION.md](NAVIGATION.md) for a complete file guide.
 
-4. **Update documentation**
-   - Update README.md if needed
-   - Update API documentation for API changes
-   - Add docstrings to new functions/classes
+Key directories:
 
-5. **Commit your changes**
-   ```bash
-   git add .
-   git commit -m "feat: add amazing feature"
-   ```
-   
-   Follow [Conventional Commits](https://www.conventionalcommits.org/) format:
-   - `feat:` A new feature
-   - `fix:` A bug fix
-   - `docs:` Documentation changes
-   - `style:` Code style changes (formatting, etc.)
-   - `refactor:` Code refactoring
-   - `test:` Adding or updating tests
-   - `chore:` Maintenance tasks
+| Directory | What's there |
+|---|---|
+| `src/api/routes/` | FastAPI endpoints |
+| `src/core/` | Business logic, agents, widgets |
+| `src/services/llm/` | LLM providers (OpenAI, Anthropic, Groq, Gemini, Ollama) |
+| `src/services/upload/` | File upload + RAG pipeline |
+| `frontend/components/` | 19 React components |
+| `frontend/lib/` | Types, API client, theme, utilities |
+| `config/` | YAML configuration |
+| `tests/` | pytest test suite |
 
-6. **Push to your fork**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
+## Testing
 
-7. **Open a Pull Request**
-   - Use the PR template
-   - Link related issues
-   - Request review from maintainers
-
-## Coding Standards
-
-### Python (Backend)
-
-We follow **PEP 8** with some modifications:
-
-```python
-# Good practices:
-- Use type hints for function signatures
-- Write docstrings for all public functions/classes
-- Keep functions small and focused
-- Use descriptive variable names
-- Maximum line length: 100 characters
-
-# Example:
-def extract_citations(
-    text: str,
-    source_urls: list[str]
-) -> list[Citation]:
-    """
-    Extract citations from text and match to source URLs.
-    
-    Args:
-        text: The text to extract citations from
-        source_urls: List of source URLs to match against
-        
-    Returns:
-        List of Citation objects with matched sources
-        
-    Raises:
-        ValueError: If text is empty
-    """
-    if not text:
-        raise ValueError("Text cannot be empty")
-    ...
-```
-
-**Tools:**
-- **Black** for code formatting: `black src/ tests/`
-- **isort** for import sorting: `isort src/ tests/`
-- **flake8** for linting: `flake8 src/ tests/`
-- **mypy** for type checking: `mypy src/`
-
-### TypeScript/JavaScript (Frontend)
-
-We follow standard TypeScript best practices:
-
-```typescript
-// Good practices:
-- Use TypeScript for all new code
-- Define interfaces for all data structures
-- Use functional components with hooks
-- Keep components small and focused
-- Use meaningful variable names
-
-// Example:
-interface ResearchRequest {
-  query: string;
-  mode: 'quick' | 'balanced' | 'deep';
-  profile?: string;
-}
-
-export async function research(
-  request: ResearchRequest
-): Promise<ResearchResponse> {
-  // Implementation
-}
-```
-
-**Tools:**
-- **Prettier** for formatting: `npm run format`
-- **ESLint** for linting: `npm run lint`
-- **TypeScript** compiler: `npm run type-check`
-
-### CSS/Styling
-
-- Use **Tailwind CSS** utility classes
-- Follow the existing design system
-- Ensure responsive design (mobile-first)
-- Test on multiple screen sizes
-- Maintain accessibility (ARIA labels, keyboard navigation)
-
-## Testing Guidelines
-
-### Backend Tests
-
-```python
-# tests/test_feature.py
-import pytest
-from src.feature import my_function
-
-def test_my_function_with_valid_input():
-    """Test that my_function works with valid input."""
-    result = my_function("valid input")
-    assert result == "expected output"
-
-def test_my_function_with_invalid_input():
-    """Test that my_function raises error with invalid input."""
-    with pytest.raises(ValueError):
-        my_function("invalid input")
-
-@pytest.mark.asyncio
-async def test_async_function():
-    """Test async functionality."""
-    result = await async_function()
-    assert result is not None
-```
-
-**Testing Requirements:**
-- Aim for >80% code coverage
-- Test happy paths and edge cases
-- Test error handling
-- Use descriptive test names
-- Use fixtures for common setup
-
-### Frontend Tests
-
-```typescript
-// Example test structure (if/when implemented)
-import { render, screen } from '@testing-library/react';
-import { ResearchComponent } from './ResearchComponent';
-
-describe('ResearchComponent', () => {
-  it('renders query input', () => {
-    render(<ResearchComponent />);
-    expect(screen.getByPlaceholderText(/ask/i)).toBeInTheDocument();
-  });
-
-  it('handles query submission', async () => {
-    // Test implementation
-  });
-});
-```
-
-### Integration Tests
+### Backend
 
 ```bash
-# Run integration tests
-python scripts/test_integration.py
+pytest tests/ -v                    # All tests
+pytest tests/test_comprehensive.py  # Core functionality
+pytest tests/test_ux_features.py    # UX feature tests
+pytest tests/test_v2_backend.py     # V2 backend tests
 ```
 
-## Documentation
+### Frontend
 
-### Code Documentation
+```bash
+cd frontend
+npx tsc --noEmit    # Type checking
+npm run build       # Full build verification
+```
 
-- **Python**: Use Google-style docstrings
-- **TypeScript**: Use JSDoc comments
-- Document all public APIs
-- Include examples in complex functions
-- Keep docs up-to-date with code changes
+## Reporting Bugs
 
-### Project Documentation
+Include:
+- Steps to reproduce
+- Expected vs actual behavior
+- OS, Python version, Node version
+- Error logs or screenshots
 
-When contributing to documentation:
+## Security Issues
 
-- **README.md**: Project overview and quick start
-- **[CODEBASE_STRUCTURE.md](CODEBASE_STRUCTURE.md)**: Detailed structure guide
-- **[NAVIGATION.md](NAVIGATION.md)**: Quick navigation reference
-- **[docs/](docs/)**: Comprehensive documentation
-  - **[docs/README.md](docs/README.md)**: Documentation index
-  - **docs/architecture/**: System design and architecture
-  - **docs/guides/**: User guides and tutorials
-  - **docs/backend/**: Backend development documentation
-  - **docs/deployment/**: Deployment and setup guides
-  - **docs/troubleshooting/**: Problem-solving guides
-  - **docs/planning/**: Project planning documents
+Do **not** open a public issue. See [SECURITY.md](SECURITY.md) for responsible disclosure.
 
-**When adding new documentation:**
+## Code of Conduct
 
-1. Determine the appropriate category
-2. Place file in the relevant `docs/` subdirectory
-3. Update [docs/README.md](docs/README.md) index
-4. Update [NAVIGATION.md](NAVIGATION.md) for commonly referenced docs
-5. Link from main README.md if user-facing
-
-See [docs/REORGANIZATION_SUMMARY.md](docs/REORGANIZATION_SUMMARY.md) for documentation organization guidelines.
+See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ### Commit Messages
 

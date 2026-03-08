@@ -1,86 +1,88 @@
 <div align="center">
 
-<img src="images/logo.png" alt="Diogenes Logo" width="150"/>
-
-# 📚 Diogenes Documentation
+# Diogenes Documentation
 
 </div>
 
-Welcome to the Diogenes documentation hub! This directory contains comprehensive documentation for the project, organized by category.
-
-## 📖 Table of Contents
-
-### 🎯 Getting Started
-- [Main README](../README.md) - Project overview and quick start
-- [Startup Guide](guides/STARTUP_GUIDE.md) - Detailed setup instructions
-- [Startup Checklist](guides/STARTUP_CHECKLIST.md) - Quick service verification
-- [Contributing Guide](../CONTRIBUTING.md) - How to contribute to the project
-
-### 🏗️ Architecture
-- [Architecture Design](architecture/architecture_design.md) - High-level system architecture
-- [System Design](architecture/SYSTEM_DESIGN.md) - Detailed system design and components
-- [Data Flow Diagrams](architecture/DATA_FLOW_DIAGRAMS.md) - Visual representation of data flows
-
-### 📘 User Guides
-- [API Specification](guides/API_SPECIFICATION.md) - Complete API documentation
-- [Research Modes](guides/MODES.md) - Understanding different research modes and profiles
-
-### 🔧 Backend Development
-- [Frontend-Backend Integration](backend/FRONTEND_BACKEND_INTEGRATION.md) - Integration guide
-
-### 🚀 Deployment
-- [Deployment Guide](deployment/DEPLOYMENT.md) - How to deploy Diogenes
-
-### 🐛 Troubleshooting
-- [Windows Compatibility](troubleshooting/WINDOWS_COMPATIBILITY.md) - Windows-specific issues
-- [Windows Crawling Fix](troubleshooting/WINDOWS_CRAWLING_FIX.md) - Fixing crawling on Windows
-
-### 📋 Planning & Requirements
-- [Product Requirements Document](planning/product_requirements_document.md) - Original PRD
+Everything you need to set up, use, and develop Diogenes.
 
 ---
 
-## 🔍 Quick Reference
+## Getting Started
 
-### For Users
-1. Start with the [Main README](../README.md)
-2. **IMPORTANT:** Start SearXNG first! See [Startup Checklist](guides/STARTUP_CHECKLIST.md)
-3. Follow the [Startup Guide](guides/STARTUP_GUIDE.md)
-4. Explore [Research Modes](guides/MODES.md)
-5. Check [API Specification](guides/API_SPECIFICATION.md) for API usage
+| Doc | Description |
+|---|---|
+| [README](../README.md) | Project overview, quick start, feature list |
+| [Startup Guide](guides/STARTUP_GUIDE.md) | Step-by-step setup for all platforms |
+| [Startup Checklist](guides/STARTUP_CHECKLIST.md) | Verify all services are running |
+| [Navigation Guide](../NAVIGATION.md) | Find any file or component quickly |
 
-### For Developers
-1. Review [Architecture Design](architecture/architecture_design.md)
-2. Read [System Design](architecture/SYSTEM_DESIGN.md)
-3. Check [Backend Documentation](backend/)
-4. See [Contributing Guide](../CONTRIBUTING.md)
+## Using Diogenes
 
-### For Deployment
-1. Follow [Deployment Guide](deployment/DEPLOYMENT.md)
+| Doc | Description |
+|---|---|
+| [Research Modes](guides/MODES.md) | Quick, Balanced, Deep modes + 6 profiles |
+| [API Specification](guides/API_SPECIFICATION.md) | All endpoints with request/response examples |
 
-### For Troubleshooting
-1. Check [Error Analysis](troubleshooting/DIOGENES_ERROR_ANALYSIS_REPORT.md)
-2. See platform-specific guides in [Troubleshooting](troubleshooting/)
+## Architecture & Design
+
+| Doc | Description |
+|---|---|
+| [Architecture Design](architecture/architecture_design.md) | High-level system architecture |
+| [System Design](architecture/SYSTEM_DESIGN.md) | Detailed component design |
+| [Data Flow Diagrams](architecture/DATA_FLOW_DIAGRAMS.md) | Visual data flow diagrams (Mermaid) |
+
+## Backend Development
+
+| Doc | Description |
+|---|---|
+| [Frontend-Backend Integration](backend/FRONTEND_BACKEND_INTEGRATION.md) | How frontend talks to backend |
+| [Backend Complete](backend/BACKEND_COMPLETE.md) | Backend implementation summary |
+| [Backend Deep Analysis](backend/BACKEND_DEEP_ANALYSIS.md) | Detailed analysis of all Python files |
+| [TODO Remediation](backend/TODO_BACKEND_REMEDIATION.md) | Known issues and fixes |
+
+## Deployment
+
+| Doc | Description |
+|---|---|
+| [Deployment Guide](deployment/DEPLOYMENT.md) | Local, Docker, and production setups |
+| [GitHub Setup](deployment/GITHUB_SETUP.md) | Publishing to GitHub checklist |
+| [Open Source Delivery](deployment/OPENSOURCE_DELIVERY.md) | Open source readiness summary |
+
+## Troubleshooting
+
+| Doc | Description |
+|---|---|
+| [Error Analysis](troubleshooting/DIOGENES_ERROR_ANALYSIS_REPORT.md) | Known errors and solutions |
+| [Windows Compatibility](troubleshooting/WINDOWS_COMPATIBILITY.md) | Windows-specific fixes |
+| [Windows Crawling Fix](troubleshooting/WINDOWS_CRAWLING_FIX.md) | Playwright crawling on Windows |
+
+## Planning
+
+| Doc | Description |
+|---|---|
+| [Product Requirements](planning/product_requirements_document.md) | Original PRD and vision |
+
+## Project-Level Docs
+
+These live in the repository root:
+
+| Doc | Description |
+|---|---|
+| [CONTRIBUTING.md](../CONTRIBUTING.md) | How to contribute |
+| [CHANGELOG.md](../CHANGELOG.md) | Version history |
+| [SECURITY.md](../SECURITY.md) | Vulnerability reporting |
+| [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Community standards |
+| [LICENSE](../LICENSE) | MIT license |
 
 ---
 
-## 📝 Documentation Standards
+## Quick Links by Role
 
-When contributing to documentation:
-- Use clear, concise language
-- Include code examples where applicable
-- Add diagrams for complex concepts
-- Keep documentation up-to-date with code changes
-- Follow Markdown best practices
+**I'm a user** — Start with the [README](../README.md), then [Startup Guide](guides/STARTUP_GUIDE.md), then [Research Modes](guides/MODES.md).
 
----
+**I'm a developer** — Read the [Navigation Guide](../NAVIGATION.md), then [Architecture](architecture/architecture_design.md), then [CONTRIBUTING](../CONTRIBUTING.md).
 
-## 🤝 Need Help?
+**I'm deploying** — Go to [Deployment Guide](deployment/DEPLOYMENT.md). For Docker, see `docker-compose.yml` (dev) or `docker-compose.prod.yml` (prod).
 
-- 📖 Check the [Troubleshooting](troubleshooting/) section
-- 💬 Open an issue on GitHub
-- 📧 Contact the maintainers
-
----
-
-**Last Updated**: February 2026
+**Something broke** — Check [Troubleshooting](troubleshooting/).

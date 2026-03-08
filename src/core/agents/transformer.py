@@ -25,7 +25,8 @@ from src.core.agents.protocol import (
     TaskResult,
     TaskType,
 )
-from src.services.llm.ollama import OllamaService
+from src.services.llm.base import LLMService
+from src.services.llm.registry import get_llm_service
 from src.config import get_settings
 
 
@@ -297,17 +298,14 @@ class TransformerAgent(BaseAgent):
         settings = get_settings()
         # Use synthesizer model for quality transformations
         self.model = model or settings.llm.models.synthesizer
-        self._llm_service: Optional[OllamaService] = None
+        self._llm_service: Optional[LLMService] = None
     
     @property
-    def llm_service(self) -> OllamaService:
+    def llm_service(self) -> LLMService:
         """Lazy-load LLM service."""
         if self._llm_service is None:
-            settings = get_settings()
-            self._llm_service = OllamaService(
-                base_url=settings.llm.base_url,
-                default_model=self.model,
-                timeout=settings.llm.timeout
+            self._llm_service = get_llm_service(
+                model=self.model,
             )
         return self._llm_service
     

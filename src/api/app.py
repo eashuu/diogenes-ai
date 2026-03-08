@@ -227,6 +227,13 @@ def create_app() -> FastAPI:
         allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["*"],
     )
+
+    # Security headers middleware (OWASP)
+    from src.api.middleware import SecurityHeadersMiddleware, RateLimitMiddleware
+    app.add_middleware(SecurityHeadersMiddleware)
+
+    # Rate limiting — 60 requests/minute per IP
+    app.add_middleware(RateLimitMiddleware, max_requests=60, window_seconds=60)
     
     # Request timing middleware
     @app.middleware("http")
@@ -308,6 +315,27 @@ def create_app() -> FastAPI:
     app.include_router(health_router)  # health at /health/
     app.include_router(memory_router, prefix="/api/v1")  # memory at /api/v1/memory
     app.include_router(settings_router, prefix="/api/v1")  # settings at /api/v1/settings
+
+    from src.api.routes.providers import router as providers_router
+    app.include_router(providers_router, prefix="/api/v1")  # providers at /api/v1/providers
+
+    from src.api.routes.uploads import router as uploads_router
+    app.include_router(uploads_router, prefix="/api/v1")  # uploads at /api/v1/uploads
+
+    from src.api.routes.search import router as search_router
+    app.include_router(search_router, prefix="/api/v1")  # search at /api/v1/search
+
+    from src.api.routes.discover import router as discover_router
+    app.include_router(discover_router, prefix="/api/v1")  # discover at /api/v1/discover
+
+    from src.api.routes.export import router as export_router
+    app.include_router(export_router, prefix="/api/v1")  # export at /api/v1/export
+
+    from src.api.routes.config import router as config_router
+    app.include_router(config_router, prefix="/api/v1")  # config at /api/v1/config
+
+    from src.api.routes.widgets import router as widgets_router
+    app.include_router(widgets_router, prefix="/api/v1")  # widgets at /api/v1/widgets
     
     # Root endpoint
     @app.get("/")

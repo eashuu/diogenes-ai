@@ -41,8 +41,8 @@ class ContentChunk:
         if not self.word_count:
             self.word_count = len(self.content.split())
         if not self.token_count:
-            # Rough estimate: 1 token ≈ 4 characters
-            self.token_count = self.char_count // 4
+            from src.processing.chunker import count_tokens
+            self.token_count = count_tokens(self.content)
     
     def _generate_id(self) -> str:
         """Generate unique chunk ID."""

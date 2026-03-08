@@ -48,24 +48,45 @@ class CrawlConfig(BaseSettings):
 class LLMModelsConfig(BaseSettings):
     """LLM model configuration."""
     
-    planner: str = "qwen2.5:3b"  # Fast model for query decomposition
-    extractor: str = "qwen2.5:3b"  # Fast model for fact extraction
-    synthesizer: str = "llama3.1:8b"  # Quality model for final answer
-    reflector: str = "llama3.1:8b"  # Quality model for reflection
+    planner: str = "qwen3:8b"  # Fast model for query decomposition
+    extractor: str = "qwen3:8b"  # Fast model for fact extraction
+    synthesizer: str = "qwen3:8b"  # Quality model for final answer
+    reflector: str = "qwen3:8b"  # Quality model for reflection
     
     model_config = SettingsConfigDict(env_prefix="DIOGENES_LLM_MODEL_")
+
+
+class LLMProviderConfig(BaseSettings):
+    """Per-provider configuration (API key, base URL, default model)."""
+    api_key: str = ""
+    base_url: str = ""
+    default_model: str = ""
+    timeout: Optional[float] = None
+
+    model_config = SettingsConfigDict(extra="allow")
+
+
+class LLMProvidersConfig(BaseSettings):
+    """Container for all provider-specific configs."""
+    openai: LLMProviderConfig = Field(default_factory=LLMProviderConfig)
+    anthropic: LLMProviderConfig = Field(default_factory=LLMProviderConfig)
+    groq: LLMProviderConfig = Field(default_factory=LLMProviderConfig)
+    gemini: LLMProviderConfig = Field(default_factory=LLMProviderConfig)
+
+    model_config = SettingsConfigDict(env_prefix="DIOGENES_LLM_PROVIDERS_")
 
 
 class LLMConfig(BaseSettings):
     """LLM service configuration."""
     
-    provider: Literal["ollama"] = "ollama"
+    provider: Literal["ollama", "openai", "anthropic", "groq", "gemini"] = "ollama"
     base_url: str = "http://localhost:11434"
     temperature: float = 0.0
     max_tokens: int = 4096
     timeout: float = 120.0
     verify_ssl: bool = True  # Set False for self-signed certs
     models: LLMModelsConfig = Field(default_factory=LLMModelsConfig)
+    providers: LLMProvidersConfig = Field(default_factory=LLMProvidersConfig)
     
     model_config = SettingsConfigDict(env_prefix="DIOGENES_LLM_")
 
@@ -217,24 +238,73 @@ def load_config(config_path: Optional[str] = None) -> Settings:
         config_path = os.environ.get("DIOGENES_CONFIG_PATH")
     
     if config_path is None:
-        # Check for environment-specific config
+        # Load default.yaml first, then layer environment-specific config on top
         env = os.environ.get("DIOGENES_ENVIRONMENT", "development")
-        possible_paths = [
-            Path(f"config/{env}.yaml"),
-            Path("config/default.yaml"),
-        ]
-        for p in possible_paths:
-            if p.exists():
-                config_path = str(p)
-                break
-    
-    # Load from YAML if available
+        default_path = Path("config/default.yaml")
+        env_path = Path(f"config/{env}.yaml")
+
+        # Start with defaults from YAML
+        merged: dict = {}
+        if default_path.exists():
+            with open(default_path, "r") as f:
+                merged = yaml.safe_load(f) or {}
+
+        # Layer environment-specific overrides
+        if env_path.exists():
+            with open(env_path, "r") as f:
+                env_data = yaml.safe_load(f) or {}
+            merged = _deep_merge(merged, env_data)
+
+        # Remove YAML values that have env var overrides set
+        # so Pydantic Settings can pick up env vars with higher precedence
+        merged = _strip_env_overrides(merged)
+        return Settings(**merged) if merged else Settings()
+
+    # Load from explicit path
     if config_path and Path(config_path).exists():
         settings = Settings.from_yaml(Path(config_path))
     else:
         settings = Settings()
-    
+
     return settings
+
+
+# Mapping of YAML paths to env var names
+_ENV_VAR_MAP = {
+    ("search", "base_url"): "DIOGENES_SEARCH_BASE_URL",
+    ("llm", "base_url"): "DIOGENES_LLM_BASE_URL",
+    ("llm", "provider"): "DIOGENES_LLM_PROVIDER",
+    ("api", "host"): "DIOGENES_API_HOST",
+    ("api", "port"): "DIOGENES_API_PORT",
+    ("api", "cors_origins"): "DIOGENES_API_CORS_ORIGINS",
+}
+
+
+def _strip_env_overrides(data: dict) -> dict:
+    """Remove YAML values that have env var overrides set."""
+    result = dict(data)
+    for path, env_var in _ENV_VAR_MAP.items():
+        if os.environ.get(env_var) is not None:
+            # Walk the path and remove the leaf
+            d = result
+            for key in path[:-1]:
+                if key not in d or not isinstance(d[key], dict):
+                    break
+                d = d[key]
+            else:
+                d.pop(path[-1], None)
+    return result
+
+
+def _deep_merge(base: dict, override: dict) -> dict:
+    """Deep-merge override into base, returning a new dict."""
+    result = dict(base)
+    for key, value in override.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = _deep_merge(result[key], value)
+        else:
+            result[key] = value
+    return result
 
 
 @lru_cache()

@@ -28,7 +28,8 @@ from src.core.agents.protocol import (
     ResearchPlan,
 )
 from src.core.agent.modes import SearchMode, MODE_CONFIGS, ModeConfig
-from src.services.llm.ollama import OllamaService
+from src.services.llm.base import LLMService
+from src.services.llm.registry import get_llm_service
 from src.config import get_settings
 
 
@@ -144,7 +145,7 @@ class CoordinatorAgent(BaseAgent):
     def __init__(
         self,
         agent_pool: Optional[AgentPool] = None,
-        llm_service: Optional[OllamaService] = None,
+        llm_service: Optional[LLMService] = None,
     ):
         """
         Initialize the coordinator.
@@ -170,13 +171,11 @@ class CoordinatorAgent(BaseAgent):
         return self._settings
     
     @property
-    def llm_service(self) -> OllamaService:
+    def llm_service(self) -> LLMService:
         """Lazy load LLM service."""
         if self._llm_service is None:
-            self._llm_service = OllamaService(
-                base_url=self.settings.llm.base_url,
-                default_model=self.settings.llm.models.planner,
-                timeout=self.settings.llm.timeout
+            self._llm_service = get_llm_service(
+                model=self.settings.llm.models.planner,
             )
         return self._llm_service
     

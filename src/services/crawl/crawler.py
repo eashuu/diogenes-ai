@@ -186,11 +186,15 @@ async def _do_playwright_crawl(url: str, config: CrawlConfig) -> CrawlResult:
         )
     except Exception as e:
         crawl_time = time.time() - start_time
+        error_str = str(e)
+        # Re-raise Playwright missing errors so caller can fall back
+        if "Executable doesn't exist" in error_str or "playwright install" in error_str:
+            raise
         logger.error(f"Crawl error for {url}: {e}")
         return CrawlResult(
             url=url,
             status=CrawlStatus.ERROR,
-            error_message=str(e),
+            error_message=error_str,
             crawl_time=crawl_time,
             crawled_at=datetime.utcnow(),
         )
@@ -280,9 +284,16 @@ class Crawl4AIService(CrawlService):
             from src.services.crawl.simple_crawler import simple_http_crawl
             return await simple_http_crawl(url, config)
         
-        # Linux/Mac: Use Playwright directly
-        logger.info(f"Using Playwright crawler for: {url}")
-        return await _do_playwright_crawl(url, config)
+        # Try Playwright, fall back to simple HTTP crawler if unavailable
+        try:
+            logger.info(f"Using Playwright crawler for: {url}")
+            return await _do_playwright_crawl(url, config)
+        except Exception as e:
+            if "Executable doesn't exist" in str(e) or "playwright install" in str(e):
+                logger.warning(f"Playwright not available, falling back to HTTP crawler: {url}")
+                from src.services.crawl.simple_crawler import simple_http_crawl
+                return await simple_http_crawl(url, config)
+            raise
     
     async def crawl_many(
         self,

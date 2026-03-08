@@ -1,6 +1,58 @@
-version: '3.8'
-
 services:
+  # Diogenes API Backend
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: diogenes-api:latest
+    container_name: diogenes-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DIOGENES_ENVIRONMENT=production
+      - DIOGENES_SEARCH_BASE_URL=http://searxng:8080
+      - DIOGENES_LLM_BASE_URL=${DIOGENES_LLM_BASE_URL:-http://host.docker.internal:11434}
+      - DIOGENES_API_HOST=0.0.0.0
+      - DIOGENES_API_PORT=8000
+      # Set provider API keys via env vars:
+      # - DIOGENES_LLM_OPENAI_API_KEY=sk-...
+      # - DIOGENES_LLM_ANTHROPIC_API_KEY=sk-ant-...
+      # - DIOGENES_LLM_GROQ_API_KEY=gsk_...
+      # - DIOGENES_LLM_GEMINI_API_KEY=AI...
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - diogenes-data:/app/data
+    depends_on:
+      searxng:
+        condition: service_healthy
+    networks:
+      - diogenes-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Diogenes Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    image: diogenes-frontend:latest
+    container_name: diogenes-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - diogenes-network
+    restart: unless-stopped
+
   # SearXNG - Privacy-focused meta search engine
   searxng:
     build:
@@ -23,9 +75,9 @@ services:
       - SETGID
       - SETUID
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
     logging:
       driver: "json-file"
@@ -56,6 +108,7 @@ services:
 
 volumes:
   ollama-data:
+  diogenes-data:
 
 networks:
   diogenes-network:

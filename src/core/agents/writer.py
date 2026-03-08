@@ -20,7 +20,8 @@ from src.core.agents.protocol import (
     TaskResult,
     TaskType,
 )
-from src.services.llm.ollama import OllamaService
+from src.services.llm.base import LLMService
+from src.services.llm.registry import get_llm_service
 from src.config import get_settings
 
 
@@ -152,7 +153,7 @@ class WriterAgent(BaseAgent):
     
     def __init__(
         self,
-        llm_service: Optional[OllamaService] = None,
+        llm_service: Optional[LLMService] = None,
     ):
         """
         Initialize the writer agent.
@@ -176,13 +177,11 @@ class WriterAgent(BaseAgent):
         return self._settings
     
     @property
-    def llm_service(self) -> OllamaService:
+    def llm_service(self) -> LLMService:
         """Lazy load LLM service."""
         if self._llm_service is None:
-            self._llm_service = OllamaService(
-                base_url=self.settings.llm.base_url,
-                default_model=self.settings.llm.models.synthesizer,
-                timeout=self.settings.llm.timeout
+            self._llm_service = get_llm_service(
+                model=self.settings.llm.models.synthesizer,
             )
         return self._llm_service
     

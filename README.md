@@ -2,502 +2,333 @@
 
 <img src="docs/images/logo.png" alt="Diogenes Logo" width="200"/>
 
-# 🔍 Diogenes
+# Diogenes
 
-### AI-Powered Research Assistant with Multi-Agent Architecture
+### Open-Source AI Research Assistant
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Node.js 18+](https://img.shields.io/badge/node-18+-green.svg)](https://nodejs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688.svg)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/) [![Node.js 20+](https://img.shields.io/badge/node-20+-green.svg)](https://nodejs.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)](https://fastapi.tiangolo.com/) [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://reactjs.org/) [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
 
-[Features](#-features) • [Demo](#-demo) • [Quick Start](#-quick-start) • [Documentation](#-documentation) • [Contributing](#-contributing)
+*Search the web, crawl pages, and get cited answers — all from a single query.*
+
+[Quick Start](#-quick-start) · [Features](#-features) · [Screenshots](#-screenshots) · [Docs](#-documentation) · [Contributing](#-contributing)
 
 </div>
 
 ---
 
-## 📖 Overview
+## What is Diogenes?
 
-**Diogenes** is an open-source AI research assistant that searches, crawls, and synthesizes information from the web to provide comprehensive, cited answers to complex queries. Named after the ancient Greek philosopher who searched for truth, Diogenes uses a multi-agent architecture to deliver reliable, fact-checked research.
+Diogenes is an AI-powered research assistant. You ask a question, it searches the web, reads the pages, checks the facts, and gives you a cited answer — like having a research team working for you.
 
-### Why Diogenes?
+**Key highlights:**
 
-- 🎯 **Multi-Agent Architecture**: Specialized agents for search, crawling, synthesis, and verification
-- 🔍 **Privacy-Focused Search**: Uses SearXNG for privacy-respecting multi-engine search
-- 📚 **Smart Web Crawling**: Extracts clean content from web pages using Playwright
-- ✅ **Claim Verification**: Automatic fact-checking with reliability scoring
-- 📝 **Cited Answers**: Every claim is backed by sources with inline citations
-- ⚡ **Real-Time Streaming**: Watch research progress with Server-Sent Events
-- 🎨 **Beautiful UI**: Modern, responsive frontend built with React and Tailwind CSS
-- 🔧 **Fully Customizable**: Six research profiles and three depth modes
+- **Multi-provider LLM** — Use OpenAI, Anthropic, Groq, Google Gemini, or local Ollama models
+- **Privacy-first search** — SearXNG metasearch engine, no tracking
+- **Real-time streaming** — Watch research happen live with Server-Sent Events
+- **Rich UI** — Discover feed, image/video search, weather & stock widgets, chat history library
+- **File upload & RAG** — Upload PDFs, DOCX, TXT and ask questions about them
+- **Docker-ready** — One command to run everything
 
----
-
-## ✨ Features
-
-### Research Capabilities
-
-- **Three Research Modes**
-  - 🚀 **Quick**: Fast answers in ~30 seconds (3-5 sources)
-  - ⚖️ **Balanced**: Standard research in ~1 minute (5-8 sources)
-  - 🔬 **Deep**: Comprehensive analysis in ~3 minutes (10-15 sources)
-
-- **Six Research Profiles**
-  - 🌍 **General**: Broad, accessible answers
-  - 🎓 **Academic**: Scholarly with citations and formal language
-  - 💻 **Technical**: Implementation details and specifications
-  - 📰 **News**: Recent events and multiple perspectives
-  - ⚕️ **Medical**: Clinical accuracy with disclaimers
-  - ⚖️ **Legal**: Statutes, precedents, and legal terminology
-
-### Technical Features
-
-- **Backend (Python + FastAPI)**
-  - Multi-agent orchestration with LangGraph
-  - Streaming API with Server-Sent Events (SSE)
-  - Configurable LLM backend (Ollama by default)
-  - Intelligent web crawling with Playwright
-  - SQLite-based caching and session storage
-  - Comprehensive error handling and logging
-
-- **Frontend (React + TypeScript)**
-  - Real-time streaming research updates
-  - Session history with local storage
-  - Inline citation references
-  - Source panel with quality indicators
-  - Three beautiful themes (Light, Dark, Diogenes)
-  - Responsive design for mobile and desktop
+Named after the Greek philosopher who searched for truth with a lantern.
 
 ---
 
-## 🎬 Demo
+## Screenshots
 
-> **Note**: Screenshots and demo GIF coming soon!
+> Screenshots coming soon — the UI includes a chat view, Discover page, Library, Settings, and mobile-responsive design.
 
-```
-User Query: "What is quantum entanglement?"
+---
 
-Diogenes:
-┌─────────────────────────────────────────────────────┐
-│ Searching 5 sources...                              │
-│ Crawling quantum physics papers...                  │
-│ Extracting key facts...                             │
-│ Synthesizing answer...                              │
-│ Verifying claims...                                 │
-└─────────────────────────────────────────────────────┘
+## Quick Start
 
-Quantum entanglement is a phenomenon in quantum mechanics where
-two or more particles become correlated in such a way that the
-state of one particle instantaneously influences the state of
-the other(s), regardless of distance [1][2]...
+### What you need
 
-Sources:
-[1] Stanford Encyclopedia of Philosophy
-[2] Nature Physics Journal
-[3] MIT OpenCourseWare
-...
+| Requirement | Version | Why |
+|---|---|---|
+| Python | 3.11+ | Backend API |
+| Node.js | 20+ | Frontend build |
+| Docker | Latest | SearXNG search engine |
+| Ollama | Latest | Local LLM (or use cloud providers) |
+
+### Option 1: Docker (easiest)
+
+```bash
+git clone https://github.com/yourusername/diogenes.git
+cd diogenes
+docker compose up -d
 ```
 
----
+This starts the API, frontend, and SearXNG. Open `http://localhost:3000`.
 
-## 🚀 Quick Start
+### Option 2: Manual setup
 
-### Prerequisites
-
-- **Python 3.10+** (for backend)
-- **Node.js 18+** (for frontend)
-- **Docker** (for SearXNG search engine - **REQUIRED**)
-- **Ollama** (recommended for local LLMs) or access to cloud LLM API
-
-**⚠️ Important:** SearXNG must be running before starting the backend!
-
-### Installation
-
-#### Option 1: Automated Setup (Windows PowerShell)
-
-```powershell
-# Clone the repository
+```bash
+# 1. Clone
 git clone https://github.com/yourusername/diogenes.git
 cd diogenes
 
-# IMPORTANT: Start SearXNG first (required!)
-docker-compose up -d --build searxng
+# 2. Start SearXNG (required)
+docker compose up -d searxng
 
-# Wait a few seconds for SearXNG to start
-Start-Sleep -Seconds 5
+# 3. Start Ollama and pull a model
+ollama pull llama3.1:8b
 
-# Run the automated setup script
+# 4. Backend
+python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
+python run_api.py            # Runs on http://localhost:8000
+
+# 5. Frontend (new terminal)
+cd frontend
+npm install
+npm run dev                  # Runs on http://localhost:5173
+```
+
+### Option 3: PowerShell script (Windows)
+
+```powershell
+docker compose up -d searxng
 .\start-diogenes.ps1
 ```
 
-**Note:** The script will check for SearXNG and refuse to start without it!
+### Verify everything works
 
-This script will:
-1. Verify SearXNG is running (required!)
-2. Install all dependencies
-3. Start backend and frontend services
-4. Open your browser to `http://localhost:5173`
-
-#### Option 2: Manual Setup
-
-**1. Clone and Setup Backend**
-
-```bash
-# Clone repository
-git clone https://github.com/yourusername/diogenes.git
-cd diogenes
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Setup configuration
-cp .env.example .env  # Edit with your settings
-```
-
-**2. Start SearXNG (Search Engine) - REQUIRED!**
-
-```bash
-# Using Docker Compose (recommended)
-docker-compose up -d --build searxng
-
-# Verify it's running
-curl http://localhost:8080/
-
-# SearXNG will be available at http://localhost:8080
-```
-
-**⚠️ The backend will NOT work without SearXNG running!**
-
-**Note**: First build takes 2-3 minutes. Subsequent starts are instant.
-
-**3. Start Ollama (LLM Backend)**
-
-```bash
-# Install Ollama from https://ollama.ai
-# Pull required models
-ollama pull llama3.1:8b
-ollama pull qwen2.5:3b
-```
-
-**4. Start Backend API**
-
-```bash
-# From project root
-python run_api.py
-
-# API will be available at http://localhost:8000
-# Docs at http://localhost:8000/docs
-```
-
-**5. Start Frontend**
-
-```bash
-# In a new terminal
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Frontend will be available at http://localhost:5173
-```
-
-**6. Open Your Browser**
-
-Navigate to `http://localhost:5173` and start researching!
+| Service | URL | Check |
+|---|---|---|
+| Frontend | http://localhost:5173 | Page loads |
+| API | http://localhost:8000/docs | Swagger UI shows |
+| SearXNG | http://localhost:8080 | Search page loads |
+| Ollama | http://localhost:11434 | Returns "Ollama is running" |
 
 ---
 
-## 📚 Documentation
+## Features
 
-### Configuration
+### Research
 
-Diogenes uses a hierarchical configuration system with the following precedence:
+| Feature | Description |
+|---|---|
+| **3 Modes** | Quick (~30s), Balanced (~1min), Deep (~3min) |
+| **6 Profiles** | General, Academic, Technical, News, Medical, Legal |
+| **Streaming** | Live progress updates via SSE |
+| **Citations** | Every claim linked to its source |
+| **Verification** | Automatic fact-checking with reliability scores |
+| **Follow-ups** | Ask follow-up questions in the same session |
 
-1. **Environment variables** (`DIOGENES_*`)
-2. **Environment-specific YAML** (`config/{environment}.yaml`)
-3. **Default YAML** (`config/default.yaml`)
-4. **Code defaults**
+### Frontend
 
-**Key Environment Variables:**
+| Feature | Description |
+|---|---|
+| **Chat** | Multi-session chat with streaming responses |
+| **Discover** | Trending articles across Science, Technology, Culture |
+| **Library** | Search, filter, sort, and export past conversations |
+| **Settings** | Multi-provider LLM config, theme picker, connection testing |
+| **ThinkBox** | See the AI's chain-of-thought reasoning |
+| **Images/Videos** | Search results with lightbox and thumbnails |
+| **Widgets** | Weather, stock quotes, calculator, unit conversion |
+| **File Upload** | Attach PDF, DOCX, TXT, MD, CSV for RAG queries |
+| **TTS** | Text-to-speech on any response |
+| **Themes** | Light, Dark, and Diogenes (warm amber) |
+| **Mobile** | Fully responsive with hamburger sidebar |
 
-```bash
-# Environment
-export DIOGENES_ENV=development  # or production
+### Backend API
 
-# Search (SearXNG)
-export DIOGENES_SEARCH_BASE_URL=http://localhost:8080
+| Feature | Description |
+|---|---|
+| **Multi-provider LLM** | OpenAI, Anthropic, Groq, Gemini, Ollama |
+| **File Upload + RAG** | Upload → extract → chunk → embed → query |
+| **Query Classification** | Auto-detects focus mode from your question |
+| **Widget System** | Calculator, unit conversion, definitions |
+| **Stock Widget** | Real-time quotes via Yahoo Finance |
+| **Config API** | Read/update settings at runtime |
+| **Export** | Export answers as Markdown or plain text |
+| **Rate Limiting** | Sliding-window per-IP rate limiter |
+| **Security Headers** | OWASP-compliant middleware |
+| **Session Tokens** | SHA-256 hashed, TTL-based, rotatable |
 
-# LLM (Ollama)
-export DIOGENES_LLM_BASE_URL=http://localhost:11434
-export DIOGENES_LLM_MODEL_SYNTHESIZER=llama3.1:8b
+### Infrastructure
 
-# API
-export DIOGENES_API_PORT=8000
-export DIOGENES_API_CORS_ORIGINS="http://localhost:5173"
-```
+| Feature | Description |
+|---|---|
+| **Dockerfiles** | Multi-stage builds for API and frontend |
+| **docker-compose.yml** | Dev environment with all services |
+| **docker-compose.prod.yml** | Production with nginx, healthchecks, resource limits |
+| **GitHub Actions CI** | Lint, test, security scan, Docker build on every push |
+| **SearXNG** | 18 engines configured (Google, Bing, Scholar, arXiv, Reddit, YouTube, etc.) |
 
-See `.env.example` for a complete list of configuration options.
+---
 
-### Architecture
+## Architecture
 
 ```
 ┌──────────────┐         ┌───────────────┐         ┌──────────────┐
-│   Frontend   │         │   Backend     │         │   SearXNG    │
+│   Frontend   │         │    Backend    │         │   SearXNG    │
 │ React + Vite │ ◄─SSE──►│   FastAPI     │ ◄──────►│   (Docker)   │
 │  Port 5173   │         │   Port 8000   │         │   Port 8080  │
-└──────────────┘         └───────────────┘         └──────────────┘
+└──────────────┘         └───────┬───────┘         └──────────────┘
                                  │
-                                 ├──► Ollama (LLM)
-                                 │    Port 11434
-                                 │
-                                 ▼
-                        ┌────────────────┐
-                        │ Multi-Agent    │
-                        │ Orchestrator   │
-                        └────────────────┘
-                                 │
-                ┌────────────────┼────────────────┐
-                ▼                ▼                ▼
-          Search Agent    Crawl Agent    Synthesis Agent
-                                         Verification Agent
+                    ┌────────────┼────────────┐
+                    ▼            ▼            ▼
+               LLM Provider  ChromaDB     SQLite
+            (Ollama/OpenAI   (vectors)   (cache/sessions)
+             /Anthropic/
+             Groq/Gemini)
 ```
 
-**Backend Architecture:**
-- **FastAPI** for REST API and SSE streaming
-- **LangGraph** for multi-agent orchestration
-- **Playwright** for web crawling
-- **Ollama** for local LLM inference
-- **SearXNG** for privacy-focused search
-- **SQLite** for caching and sessions
-
-**Frontend Architecture:**
-- **React 19** with TypeScript
-- **Vite** for development and building
-- **Tailwind CSS** for styling
-- **Framer Motion** for animations
-- **React Markdown** for answer rendering
-
-### API Endpoints
-
-#### Research API v1
-
-**POST `/api/v1/research/`** - Blocking research query
-```json
-{
-  "query": "What is quantum computing?",
-  "mode": "balanced"
-}
-```
-
-**POST `/api/v1/research/stream`** - Streaming research with SSE
-```json
-{
-  "query": "Explain AI safety",
-  "mode": "deep",
-  "profile": "academic"
-}
-```
-
-**GET `/api/v1/health/`** - Health check
-
-See full API documentation at `http://localhost:8000/docs` after starting the backend.
-
----
-
-## � Documentation
-
-Comprehensive documentation is available in the [docs/](docs/) directory:
-
-### 📖 For Users
-- **[Startup Guide](docs/guides/STARTUP_GUIDE.md)** - Detailed setup and installation
-- **[Research Modes](docs/guides/MODES.md)** - Understanding research modes and profiles
-- **[API Specification](docs/guides/API_SPECIFICATION.md)** - Complete API documentation
-
-### 🏗️ For Developers
-- **[Architecture Design](docs/architecture/architecture_design.md)** - System architecture overview
-- **[System Design](docs/architecture/SYSTEM_DESIGN.md)** - Detailed component design
-- **[Data Flow Diagrams](docs/architecture/DATA_FLOW_DIAGRAMS.md)** - Visual architecture
-- **[Backend Documentation](docs/backend/)** - Backend implementation details
-
-### 🚀 For Deployment
-- **[Deployment Guide](docs/deployment/DEPLOYMENT.md)** - Production deployment instructions
-
-### 🐛 Troubleshooting
-- **[Windows Compatibility](docs/troubleshooting/WINDOWS_COMPATIBILITY.md)** - Windows-specific fixes
-- **[Windows Crawling Fix](docs/troubleshooting/WINDOWS_CRAWLING_FIX.md)** - Playwright on Windows
-
-📖 **[Browse All Documentation →](docs/README.md)**
-
----
-
-## �🛠️ Development
-
-### Running Tests
-
-```bash
-# Backend tests
-pytest tests/ -v
-
-# Integration tests
-python scripts/test_integration.py
-
-# Frontend tests (if implemented)
-cd frontend && npm test
-```
-
-### Code Quality
-
-```bash
-# Python formatting
-black src/ tests/
-
-# Python linting
-flake8 src/ tests/
-
-# Type checking
-mypy src/
-```
+**Backend**: Python 3.11, FastAPI, LangGraph, Playwright, httpx
+**Frontend**: React 19, TypeScript, Vite, Tailwind CSS, Framer Motion
+**Search**: SearXNG with 18 engines (web, academic, news, images, videos, social)
+**Storage**: SQLite (sessions/cache), ChromaDB (vector embeddings), NetworkX (knowledge graph)
 
 ### Project Structure
 
 ```
 diogenes/
-├── src/                    # Backend source code
-│   ├── api/               # FastAPI routes and schemas
-│   ├── core/              # Core business logic
-│   │   ├── agents/        # Multi-agent orchestration
-│   │   ├── citation/      # Citation extraction
-│   │   └── research/      # Research pipeline
-│   ├── services/          # External service integrations
-│   │   ├── crawl/         # Web crawling
-│   │   ├── llm/           # LLM service
-│   │   └── search/        # Search service
-│   ├── storage/           # Data persistence
-│   └── utils/             # Utilities
-├── frontend/              # React frontend
-│   ├── components/        # React components
-│   ├── lib/               # Utilities and services
-│   └── public/            # Static assets
-├── config/                # Configuration files
-├── docs/                  # Documentation (organized by category)
-│   ├── architecture/      # System design documents
-│   ├── guides/            # User guides
-│   ├── backend/           # Backend documentation
-│   ├── deployment/        # Deployment guides
-│   ├── troubleshooting/   # Problem solving
-│   └── planning/          # Project planning
-├── tests/                 # Test suite
-└── scripts/               # Utility scripts
+├── src/                       # Python backend
+│   ├── api/                   # FastAPI app, routes, middleware
+│   │   ├── routes/            # research, search, discover, export, config, providers, uploads, widgets
+│   │   └── middleware.py      # Rate limiting, security headers
+│   ├── core/                  # Business logic
+│   │   ├── agents/            # Research orchestrator, researcher, writer, verifier
+│   │   ├── classifier.py      # Query classification
+│   │   └── widgets.py         # Calculator, unit conversion, definitions
+│   ├── services/              # External integrations
+│   │   ├── llm/               # Multi-provider LLM (OpenAI, Anthropic, Groq, Gemini, Ollama)
+│   │   ├── search/            # SearXNG search service
+│   │   ├── crawl/             # Playwright web crawler
+│   │   └── upload/            # File upload + RAG pipeline
+│   ├── processing/            # Content chunking (tiktoken), extraction
+│   └── storage/               # SQLite, ChromaDB, NetworkX
+├── frontend/                  # React frontend
+│   ├── components/            # 19 React components
+│   ├── lib/                   # Types, API service, theme, utilities
+│   └── demo.tsx               # Main app orchestrator
+├── config/                    # YAML configs (default, dev, prod)
+├── searxng/                   # SearXNG settings + Dockerfile
+├── nginx/                     # Production nginx config
+├── tests/                     # pytest test suite
+├── scripts/                   # Utility scripts
+├── .github/workflows/         # CI/CD pipelines
+├── docker-compose.yml         # Dev environment
+├── docker-compose.prod.yml    # Production environment
+└── docs/                      # Full documentation
 ```
 
+---
 
+## API Quick Reference
+
+All endpoints live under `/api/v1/`. Full interactive docs at `/docs` when running.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/research/stream` | Start streaming research |
+| `POST` | `/research/` | Blocking research query |
+| `GET` | `/research/{id}` | Get session results |
+| `GET` | `/search/images?q=...` | Image search |
+| `GET` | `/search/videos?q=...` | Video search |
+| `GET` | `/search/social?q=...` | Discussion/social search |
+| `GET` | `/discover?category=...` | Trending articles |
+| `POST` | `/uploads` | Upload a file for RAG |
+| `POST` | `/uploads/query` | Query uploaded files |
+| `GET` | `/providers` | List LLM providers |
+| `POST` | `/providers/active` | Set active provider |
+| `GET` | `/widgets/stock?symbol=...` | Stock quote |
+| `POST` | `/export/` | Export answer as Markdown/text |
+| `GET` | `/config/` | Get current config |
+| `POST` | `/config/` | Update config |
+| `GET` | `/health/` | Health check |
 
 ---
 
-## 🤝 Contributing
+## Configuration
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Diogenes uses layered config: **env vars** > **YAML files** > **defaults**.
 
-### How to Contribute
+### Environment variables
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests (`pytest tests/`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+```bash
+# Core
+DIOGENES_ENV=development              # development | production
+DIOGENES_SEARCH_BASE_URL=http://localhost:8080
+DIOGENES_LLM_BASE_URL=http://localhost:11434
 
-### Areas for Contribution
+# LLM Providers (set the ones you use)
+DIOGENES_PROVIDERS_OPENAI_API_KEY=sk-...
+DIOGENES_PROVIDERS_ANTHROPIC_API_KEY=sk-ant-...
+DIOGENES_PROVIDERS_GROQ_API_KEY=gsk_...
+DIOGENES_PROVIDERS_GEMINI_API_KEY=AI...
 
-- 🐛 **Bug fixes**: Check [Issues](https://github.com/yourusername/diogenes/issues)
-- ✨ **New features**: Research profiles, export formats, analytics
-- 📚 **Documentation**: Tutorials, guides, API examples
-- 🧪 **Testing**: Increase coverage, add integration tests
-- 🎨 **UI/UX**: Design improvements, accessibility
-- 🌍 **Internationalization**: Translations, multi-language support
+# API Security (optional, for production)
+DIOGENES_API_REQUIRE_API_KEY=true
+DIOGENES_API_API_KEY=your-secret-key
+```
 
----
+### YAML config files
 
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-### What this means:
-- ✅ Commercial use allowed
-- ✅ Modification allowed
-- ✅ Distribution allowed
-- ✅ Private use allowed
-- ℹ️ License and copyright notice required
+- `config/default.yaml` — Base settings (LLM models, processing, search, API)
+- `config/development.yaml` — Dev overrides
+- `config/production.yaml` — Prod overrides
 
 ---
 
-## 🙏 Acknowledgments
+## Documentation
 
-### Built With
-
-- [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
-- [React](https://reactjs.org/) - UI library
-- [LangGraph](https://github.com/langchain-ai/langgraph) - Multi-agent orchestration
-- [SearXNG](https://github.com/searxng/searxng) - Privacy-respecting metasearch engine
-- [Playwright](https://playwright.dev/) - Web crawling and automation
-- [Ollama](https://ollama.ai/) - Local LLM inference
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-
-### Inspiration
-
-Named after **Diogenes of Sinope**, the ancient Greek philosopher who wandered with a lamp in daylight, searching for an honest person - symbolizing the quest for truth and genuine knowledge.
+| Doc | What it covers |
+|---|---|
+| **[Startup Guide](docs/guides/STARTUP_GUIDE.md)** | Step-by-step setup |
+| **[Research Modes](docs/guides/MODES.md)** | Quick / Balanced / Deep + 6 profiles |
+| **[API Specification](docs/guides/API_SPECIFICATION.md)** | All endpoints with examples |
+| **[Architecture Design](docs/architecture/architecture_design.md)** | System design overview |
+| **[Data Flow Diagrams](docs/architecture/DATA_FLOW_DIAGRAMS.md)** | Visual data flows |
+| **[Deployment Guide](docs/deployment/DEPLOYMENT.md)** | Docker, production, nginx |
+| **[Windows Fixes](docs/troubleshooting/WINDOWS_COMPATIBILITY.md)** | Windows-specific issues |
+| **[All Docs](docs/README.md)** | Full documentation index |
 
 ---
 
-## 🌟 Star History
+## Contributing
 
-If you find Diogenes useful, please consider giving it a star ⭐ on GitHub!
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
+
+**Quick version:**
+
+```bash
+# Fork → Clone → Branch
+git checkout -b feature/my-feature
+
+# Make changes → Test
+pytest tests/ -v
+cd frontend && npx tsc --noEmit
+
+# Commit (conventional commits)
+git commit -m "feat: add my feature"
+
+# Push → Open PR
+git push origin feature/my-feature
+```
 
 ---
 
-## 📞 Support
+## License
 
-- **Documentation**: [Full Documentation](docs/)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/diogenes/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/diogenes/discussions)
+MIT — see [LICENSE](LICENSE). Use it however you want.
 
 ---
 
-## 🗺️ Roadmap
+## Acknowledgments
 
-### v2.1 (Next Release)
-- [ ] Export research to PDF/Markdown
-- [ ] User authentication and accounts
-- [ ] Backend session persistence
-- [ ] Advanced analytics dashboard
-
-### v2.2
-- [ ] Real-time collaboration
-- [ ] Custom research profiles
-- [ ] Plugin system for extensions
-- [ ] Multi-language support
-
-### v3.0
-- [ ] Knowledge graph integration
-- [ ] Long-term memory and learning
-- [ ] Advanced visualization tools
-- [ ] Mobile apps (iOS/Android)
+Built with [FastAPI](https://fastapi.tiangolo.com/), [React](https://reactjs.org/), [LangGraph](https://github.com/langchain-ai/langgraph), [SearXNG](https://github.com/searxng/searxng), [Playwright](https://playwright.dev/), [Ollama](https://ollama.ai/), [Tailwind CSS](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/).
 
 ---
 
 <div align="center">
 
-Made with ❤️ by the open-source community
+**[Back to top](#diogenes)**
+
+</div>
 
 **[⬆ Back to Top](#-diogenes)**
 

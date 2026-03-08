@@ -305,6 +305,23 @@ async def stream_research(request: ResearchRequest):
                         "message": "Research starting..."
                     })
                 }
+
+                # Check for instant widget answers (calculator, conversions, etc.)
+                from src.core.widgets import try_widget
+                widget_result = try_widget(request.query)
+                if widget_result:
+                    yield {
+                        "event": SSEEventType.WIDGET_BLOCK.value,
+                        "data": json.dumps(widget_result.to_dict())
+                    }
+
+                # Classify query to optimize search strategy
+                from src.core.classifier import classify_query
+                classification = classify_query(
+                    request.query,
+                    file_ids=getattr(request, "file_ids", None),
+                )
+                logger.info(f"Query classified as {classification.mode.value} (confidence={classification.confidence})")
                 
                 # Convert mode string to SearchMode enum
                 mode_enum = SearchMode[request.mode.upper()]

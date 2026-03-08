@@ -1,0 +1,144 @@
+# docker-compose.prod.yml — Production deployment
+#
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Requires:
+#   - .env file with DIOGENES_API_KEY, SEARXNG_SECRET_KEY
+#   - SSL certificates mounted at ./certs/ (optional, for HTTPS)
+
+services:
+  # ─── API ────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: diogenes-api
+    restart: unless-stopped
+    environment:
+      - DIOGENES_ENVIRONMENT=production
+      - DIOGENES_API_HOST=0.0.0.0
+      - DIOGENES_API_PORT=8000
+      - DIOGENES_API_REQUIRE_API_KEY=true
+      - DIOGENES_API_API_KEY=${DIOGENES_API_KEY:?Set DIOGENES_API_KEY in .env}
+      - DIOGENES_SEARCH_BASE_URL=http://searxng:8080
+      - DIOGENES_LLM_BASE_URL=http://ollama:11434
+    volumes:
+      - api-data:/app/data
+      - api-uploads:/app/uploads
+    networks:
+      - diogenes-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "2.0"
+    depends_on:
+      searxng:
+        condition: service_healthy
+
+  # ─── Frontend ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/api
+    container_name: diogenes-frontend
+    restart: unless-stopped
+    networks:
+      - diogenes-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
+
+  # ─── Reverse Proxy (nginx) ─────────────────────────────────
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: diogenes-nginx
+    restart: unless-stopped
+    ports:
+      - "${DIOGENES_PORT:-80}:80"
+      - "${DIOGENES_SSL_PORT:-443}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    networks:
+      - diogenes-network
+    depends_on:
+      - api
+      - frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ─── SearXNG ────────────────────────────────────────────────
+  searxng:
+    image: searxng/searxng:latest
+    container_name: diogenes-searxng
+    restart: unless-stopped
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+      - searxng-data:/etc/searxng
+    networks:
+      - diogenes-network
+    environment:
+      - SEARXNG_SECRET=${SEARXNG_SECRET_KEY:-changeme}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  # ─── Ollama (optional — enable via profile) ─────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: diogenes-ollama
+    profiles:
+      - gpu
+    restart: unless-stopped
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - diogenes-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+volumes:
+  api-data:
+    driver: local
+  api-uploads:
+    driver: local
+  searxng-data:
+    driver: local
+  ollama-data:
+    driver: local
+
+networks:
+  diogenes-network:
+    driver: bridge

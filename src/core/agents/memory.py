@@ -10,7 +10,7 @@ from typing import Any
 
 from src.core.agents.base import BaseAgent, AgentCapability
 from src.core.agents.protocol import TaskAssignment, TaskResult
-from src.services.llm.ollama import OllamaService
+from src.services.llm.base import LLMService
 from src.storage.memory_store import (
     MemoryStore,
     MemoryType,
@@ -104,7 +104,7 @@ class MemoryAgent(BaseAgent):
     
     def __init__(
         self,
-        llm_service: OllamaService | None = None,
+        llm_service: LLMService | None = None,
         memory_store: MemoryStore | None = None,
         agent_id: str | None = None
     ):
@@ -127,11 +127,11 @@ class MemoryAgent(BaseAgent):
         self._auto_extract = True  # Auto-extract memories from queries
     
     @property
-    def llm_service(self) -> OllamaService:
+    def llm_service(self) -> LLMService:
         """Get LLM service, creating if needed."""
         if self._llm_service is None:
-            from src.services.llm.ollama import OllamaService
-            self._llm_service = OllamaService()
+            from src.services.llm.registry import get_llm_service
+            self._llm_service = get_llm_service()
         return self._llm_service
     
     @property

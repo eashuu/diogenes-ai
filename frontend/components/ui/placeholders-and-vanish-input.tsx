@@ -11,12 +11,14 @@ export function PlaceholdersAndVanishInput({
   onSubmit,
   leftAction,
   className,
+  controlledValue,
 }: {
   placeholders: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   leftAction?: React.ReactNode;
   className?: string;
+  controlledValue?: string;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -56,8 +58,15 @@ export function PlaceholdersAndVanishInput({
   const [animating, setAnimating] = useState(false);
   const newDataRef = useRef<any[]>([]);
 
+  // Sync internal value with controlled value from parent (e.g. suggestion clicks)
+  useEffect(() => {
+    if (controlledValue !== undefined && controlledValue !== value && !animating) {
+      setValue(controlledValue);
+    }
+  }, [controlledValue]);
+
   // Constants for layout
-  const LEFT_OFFSET = leftAction ? 52 : 20;
+  const LEFT_OFFSET = leftAction ? 140 : 20;
 
   const draw = useCallback((inputValue: string) => {
     if (!inputRef.current || !canvasRef.current) return;
@@ -220,7 +229,7 @@ export function PlaceholdersAndVanishInput({
     >
       {/* Left Action Area */}
       {leftAction && (
-         <div className="absolute left-0 top-0 bottom-0 w-[52px] z-50 flex items-center justify-center bg-foreground/0">
+         <div className="absolute left-0 top-0 bottom-0 w-[140px] z-50 flex items-center justify-center bg-foreground/0">
             {leftAction}
          </div>
       )}
@@ -250,7 +259,7 @@ export function PlaceholdersAndVanishInput({
           className={cn(
             "w-full h-full bg-transparent text-sm sm:text-base text-foreground border-none focus:outline-none focus:ring-0 placeholder:text-transparent z-20 relative",
             animating && "text-transparent caret-transparent",
-            leftAction ? "pl-[52px]" : "pl-5",
+            leftAction ? "pl-[140px]" : "pl-5",
             "pr-12"
           )}
         />
@@ -259,7 +268,7 @@ export function PlaceholdersAndVanishInput({
         <div 
           className={cn(
             "absolute inset-y-0 flex items-center pointer-events-none overflow-hidden right-12 z-0",
-            leftAction ? "left-[52px]" : "left-5"
+            leftAction ? "left-[140px]" : "left-5"
           )}
         >
           <AnimatePresence mode="wait">

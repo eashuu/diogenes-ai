@@ -15,6 +15,29 @@ from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
+# Lazy-loaded tiktoken encoder
+_tiktoken_encoder = None
+
+
+def _get_encoder():
+    """Get a tiktoken encoder, falling back to approximate counting."""
+    global _tiktoken_encoder
+    if _tiktoken_encoder is None:
+        try:
+            import tiktoken
+            _tiktoken_encoder = tiktoken.get_encoding("cl100k_base")
+        except Exception:
+            _tiktoken_encoder = False  # mark as unavailable
+    return _tiktoken_encoder
+
+
+def count_tokens(text: str) -> int:
+    """Count tokens using tiktoken if available, else approximate."""
+    enc = _get_encoder()
+    if enc:
+        return len(enc.encode(text))
+    return len(text) // 4
+
 
 class SmartChunker:
     """
@@ -52,8 +75,8 @@ class SmartChunker:
         self.min_chunk_size = min_chunk_size or settings.processing.min_chunk_size
     
     def _estimate_tokens(self, text: str) -> int:
-        """Estimate token count (rough: 1 token ≈ 4 chars)."""
-        return len(text) // 4
+        """Count tokens using tiktoken (accurate) or approximate fallback."""
+        return count_tokens(text)
     
     def _split_by_separator(self, text: str, separator: str) -> list[str]:
         """Split text by separator, keeping the separator."""

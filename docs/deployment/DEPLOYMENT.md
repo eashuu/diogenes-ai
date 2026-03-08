@@ -1,243 +1,175 @@
-# Installation and Deployment Guide
-
-This guide provides detailed instructions for installing and deploying Diogenes in various environments.
+# Deployment Guide
 
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
 - [Local Development](#local-development)
-- [Docker Deployment](#docker-deployment)
-- [Production Deployment](#production-deployment)
+- [Docker (Development)](#docker-development)
+- [Docker (Production)](#docker-production)
+- [Manual Production Setup](#manual-production-setup)
+- [CI/CD Pipeline](#cicd-pipeline)
 - [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Prerequisites
 
-### System Requirements
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Python | 3.11+ | Backend |
+| Node.js | 20+ | Frontend |
+| Docker | 20.10+ | Optional — for containerized deployment |
+| Docker Compose | v2+ | Included with Docker Desktop |
+| Git | Latest | Source control |
 
-- **CPU**: 2+ cores recommended
-- **RAM**: 4GB minimum, 8GB+ recommended
-- **Storage**: 10GB free space minimum
-- **Network**: Reliable internet connection for web search
-
-### Software Requirements
-
-- **Python**: 3.10 or higher
-- **Node.js**: 18 or higher
-- **Git**: Latest version
-- **Docker**: 20.10+ (optional, for containerized deployment)
-- **Docker Compose**: 1.29+ (optional)
-
-### External Services
-
-- **Ollama**: For local LLM inference (recommended) or cloud LLM API
-- **SearXNG**: For web search (included in Docker setup)
-- **Browser**: Chrome, Firefox, Safari, or Edge (for frontend)
+**External Services:**
+- **SearXNG** — Web search (included in Docker setup)
+- **LLM Provider** — At least one of: Ollama (local), OpenAI, Anthropic, Groq, Google Gemini
 
 ---
 
 ## Local Development
 
-### Step 1: Clone the Repository
+### 1. Clone & Setup Backend
 
 ```bash
-git clone https://github.com/yourusername/diogenes.git
+git clone https://github.com/eashuu/diogenes.git
 cd diogenes
-```
-
-### Step 2: Setup Backend
-
-```bash
-# Create virtual environment
 python -m venv venv
-
-# Activate virtual environment
-# On macOS/Linux:
-source venv/bin/activate
-
-# On Windows (PowerShell):
-venv\Scripts\Activate.ps1
-
-# On Windows (Command Prompt):
-venv\Scripts\activate.bat
-
-# Install dependencies
+venv\Scripts\Activate.ps1          # Windows PowerShell
+# source venv/bin/activate         # macOS/Linux
 pip install -r requirements.txt
-
-# (Optional) Install development dependencies
-pip install -r requirements-dev.txt
 ```
 
-### Step 3: Configure Backend
+### 2. Configure Environment
 
 ```bash
-# Copy environment template
 cp .env.example .env
-
-# Edit .env with your settings
-# Minimal required changes:
-# DIOGENES_SEARCH_BASE_URL=http://localhost:8080  (if running SearXNG)
-# DIOGENES_LLM_BASE_URL=http://localhost:11434    (if running Ollama)
 ```
 
-### Step 4: Setup Frontend
+Edit `.env`:
+```bash
+DIOGENES_SEARCH_BASE_URL=http://localhost:8080
+DIOGENES_LLM_BASE_URL=http://localhost:11434   # Ollama
+
+# Optional cloud providers:
+# OPENAI_API_KEY=sk-...
+# ANTHROPIC_API_KEY=sk-ant-...
+# GROQ_API_KEY=gsk_...
+# GOOGLE_API_KEY=...
+```
+
+### 3. Setup Frontend
 
 ```bash
-# Navigate to frontend directory
 cd frontend
-
-# Install dependencies
 npm install
-
-# Create .env.local if needed
-cp .env.example .env.local
-
-# Return to project root
 cd ..
 ```
 
-### Step 5: Start Services
+### 4. Start Everything
 
-#### Option A: Automated Startup (Windows)
-
+**Option A — Automated (Windows):**
 ```powershell
 .\start-diogenes.ps1
 ```
 
-#### Option B: Manual Startup
+**Option B — Manual (4 terminals):**
 
-**Terminal 1 - SearXNG (Search Engine)**
-```bash
-docker run -d -p 8080:8080 searxng/searxng
-```
+| Terminal | Command | Purpose |
+|----------|---------|---------|
+| 1 | `docker-compose up -d searxng` | SearXNG search engine |
+| 2 | `ollama serve` | Local LLM (if using Ollama) |
+| 3 | `python run_api.py` | Backend API |
+| 4 | `cd frontend && npm run dev` | Frontend |
 
-**Terminal 2 - Ollama (LLM)**
-```bash
-# Install from https://ollama.ai first
-ollama serve
-```
+### 5. Access
 
-**Terminal 3 - Backend API**
-```bash
-python run_api.py
-```
-
-**Terminal 4 - Frontend**
-```bash
-cd frontend
-npm run dev
-```
-
-### Step 6: Access the Application
-
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000
-- **API Docs**: http://localhost:8000/docs
-- **SearXNG**: http://localhost:8080
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8000 |
+| API Docs (Swagger) | http://localhost:8000/docs |
+| SearXNG | http://localhost:8080 |
 
 ---
 
-## Docker Deployment
+## Docker (Development)
 
-### Prerequisites
-
-- Docker Desktop or Docker Engine installed
-- Docker Compose installed
-
-### Quick Start with Docker Compose
+Start all services with one command:
 
 ```bash
-# Start all services
 docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
-
-# Remove volumes (caution: deletes data)
-docker-compose down -v
+docker-compose logs -f          # Watch logs
+docker-compose down             # Stop all
 ```
 
-### Services Started
-
-- **diogenes-backend**: FastAPI backend on port 8000
-- **diogenes-frontend**: React frontend on port 5173
-- **searxng**: Search engine on port 8080
-- **ollama**: LLM service on port 11434
-
-### Accessing Services
-
-- Frontend: http://localhost:5173
-- Backend: http://localhost:8000
-- API Docs: http://localhost:8000/docs
-- SearXNG Admin: http://localhost:8080/admin
-
-### Custom Configuration
-
-Edit `docker-compose.yml` to customize:
-- Environment variables
-- Port mappings
-- Volume mounts
-- Resource limits
+Services started: backend (8000), frontend (3000), SearXNG (8080), Ollama (11434).
 
 ---
 
-## Production Deployment
+## Docker (Production)
 
-### Prerequisites
+Uses `docker-compose.prod.yml` with nginx reverse proxy, health checks, resource limits, and security hardening.
 
-- Linux server (Ubuntu 20.04+ recommended)
-- HTTPS certificate (Let's Encrypt recommended)
-- Reverse proxy (Nginx or Apache)
-- Process manager (systemd or supervisor)
-- Monitoring tools (optional)
-
-### Backend Deployment
-
-#### 1. Setup Server
+### 1. Set API Keys
 
 ```bash
-# SSH into server
-ssh user@your-server.com
+cp .env.example .env
+# Edit .env — set at least one LLM provider key
+```
 
-# Update system
+### 2. Launch
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+### What's Included
+
+| Service | Description |
+|---------|-------------|
+| **nginx** | Reverse proxy — TLS, rate limiting, security headers, SSE support |
+| **diogenes-backend** | FastAPI with gunicorn workers |
+| **diogenes-frontend** | Built React app served by nginx |
+| **searxng** | Search engine with 18 engines configured |
+
+### Production nginx Features
+
+- Rate limiting (10 req/s burst 20)
+- Security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)
+- SSE proxy support (buffering off, no timeout)
+- Gzip compression
+- Static asset caching
+
+### Health Checks
+
+```bash
+curl http://localhost/health/        # Backend health
+curl http://localhost/health/ready   # Readiness probe
+```
+
+---
+
+## Manual Production Setup
+
+For deploying without Docker on a Linux server.
+
+### 1. Server Setup
+
+```bash
 sudo apt update && sudo apt upgrade -y
-
-# Install Python and dependencies
-sudo apt install python3.10 python3.10-venv python3-pip git -y
-
-# Clone repository
-git clone https://github.com/yourusername/diogenes.git
+sudo apt install python3.11 python3.11-venv python3-pip git nginx -y
+git clone https://github.com/eashuu/diogenes.git
 cd diogenes
-
-# Create virtual environment
-python3.10 -m venv venv
+python3.11 -m venv venv
 source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-pip install gunicorn  # Production WSGI server
+pip install -r requirements.txt gunicorn
 ```
 
-#### 2. Configure Production Settings
+### 2. Systemd Service
 
-```bash
-# Edit .env for production
-nano .env
-
-# Set:
-DIOGENES_ENV=production
-DIOGENES_API_DEBUG=false
-DIOGENES_LOG_LEVEL=WARNING
-DIOGENES_API_CORS_ORIGINS=https://yourdomain.com
-```
-
-#### 3. Setup Systemd Service
-
-Create `/etc/systemd/system/diogenes-backend.service`:
+Create `/etc/systemd/system/diogenes.service`:
 
 ```ini
 [Unit]
@@ -245,7 +177,6 @@ Description=Diogenes Backend API
 After=network.target
 
 [Service]
-Type=notify
 User=diogenes
 WorkingDirectory=/home/diogenes/diogenes
 Environment="PATH=/home/diogenes/diogenes/venv/bin"
@@ -254,39 +185,25 @@ ExecStart=/home/diogenes/diogenes/venv/bin/gunicorn \
     --worker-class uvicorn.workers.UvicornWorker \
     --bind 127.0.0.1:8000 \
     src.api.app:app
-
 Restart=always
-RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Enable and start:
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable diogenes-backend
-sudo systemctl start diogenes-backend
+sudo systemctl enable --now diogenes
 ```
 
-### Frontend Deployment
+### 3. Build & Deploy Frontend
 
 ```bash
-cd frontend
-
-# Build for production
-npm run build
-
-# Output in dist/ directory
-
-# Upload to CDN or web server
-# Example with rsync:
-rsync -avz dist/ user@your-server.com:/var/www/diogenes/
+cd frontend && npm run build
+sudo cp -r dist/ /var/www/diogenes/
 ```
 
-### Nginx Configuration
-
-Create `/etc/nginx/sites-available/diogenes`:
+### 4. nginx Config
 
 ```nginx
 upstream diogenes_backend {
@@ -312,18 +229,14 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
-    # Backend API
+    # Backend API + SSE
     location /api/ {
         proxy_pass http://diogenes_backend;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
-        # SSE support
         proxy_cache off;
         proxy_buffering off;
         proxy_read_timeout 86400;
@@ -331,205 +244,34 @@ server {
 }
 ```
 
-Enable the site:
-```bash
-sudo ln -s /etc/nginx/sites-available/diogenes /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-```
+---
 
-### External Services
+## CI/CD Pipeline
 
-#### Deploy SearXNG
+GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and PR:
 
-```bash
-# Using Docker
-docker pull searxng/searxng
-docker run -d \
-    -p 8080:8080 \
-    -v /etc/searxng:/etc/searxng \
-    --name searxng \
-    searxng/searxng
-
-# Or use existing SearXNG instance
-# Update DIOGENES_SEARCH_BASE_URL in .env
-```
-
-#### Deploy Ollama
-
-```bash
-# Install Ollama
-curl https://ollama.ai/install.sh | sh
-
-# Pull models
-ollama pull llama3.1:8b
-ollama pull qwen2.5:3b
-
-# Expose Ollama API (if remote)
-# Run with: OLLAMA_HOST=0.0.0.0:11434 ollama serve
-```
-
-### Monitoring
-
-#### Setup Logs
-
-```bash
-# Systemd logs
-sudo journalctl -u diogenes-backend -f
-
-# Application logs
-tail -f /var/log/diogenes/app.log
-```
-
-#### Health Check
-
-```bash
-# Manual check
-curl https://yourdomain.com/api/v1/health/
-
-# Automated monitoring (example with uptimerobot)
-# Set health check URL: https://yourdomain.com/api/v1/health/
-```
+| Job | Checks |
+|-----|--------|
+| **Backend** | Python lint (ruff), pytest, security scan (bandit) |
+| **Frontend** | TypeScript type-check, Vite build |
+| **Docker** | Compose config validation, image build |
 
 ---
 
 ## Troubleshooting
 
-### Common Issues
+| Problem | Solution |
+|---------|----------|
+| Port 8000 in use | `lsof -i :8000` then `kill -9 <PID>` |
+| CORS error in browser | Check `DIOGENES_API_CORS_ORIGINS` in `.env` |
+| SearXNG not responding | `docker-compose restart searxng` |
+| Ollama connection refused | Run `ollama serve` or check `DIOGENES_LLM_BASE_URL` |
+| Frontend can't reach API | Verify `VITE_API_URL` in `frontend/.env.local` |
 
-#### Backend Won't Start
-
-**Issue**: `Address already in use`
-```bash
-# Find process using port 8000
-lsof -i :8000
-
-# Kill process
-kill -9 <PID>
-```
-
-**Issue**: `LLM connection refused`
-```bash
-# Ensure Ollama is running
-ollama serve
-
-# Or update DIOGENES_LLM_BASE_URL in .env
-```
-
-#### Frontend Can't Connect to Backend
-
-**Issue**: CORS error in browser console
-```
-Access-Control-Allow-Origin: missing header
-```
-
-**Solution**:
-1. Ensure backend is running
-2. Check DIOGENES_API_CORS_ORIGINS in backend .env
-3. Clear browser cache (Ctrl+Shift+Delete)
-
-#### Search Not Working
-
-**Issue**: SearXNG connection timeout
-```bash
-# Check if SearXNG is running
-curl http://localhost:8080
-
-# If using Docker:
-docker ps | grep searxng
-
-# Restart if needed
-docker restart searxng
-```
-
-### Getting Help
-
-1. Check the [documentation](docs/)
-2. Search [existing issues](https://github.com/yourusername/diogenes/issues)
-3. Create a [new issue](https://github.com/yourusername/diogenes/issues/new) with:
-   - Error messages
-   - Configuration (sanitized)
-   - Steps to reproduce
-   - System information
-
----
-
-## Performance Tuning
-
-### Backend Optimization
-
-```yaml
-# config/production.yaml
-crawl:
-  max_concurrent: 10  # Increase for faster crawling
-  timeout: 60.0       # Adjust based on network
-
-agent:
-  max_sources: 15     # More sources = slower but better
-  coverage_threshold: 0.8  # Higher = better quality
-
-processing:
-  max_total_context: 64000  # More context for better synthesis
-```
-
-### Frontend Optimization
+### Backup
 
 ```bash
-# Build with optimizations
-npm run build
-
-# Enable compression in Nginx
-gzip on;
-gzip_types text/plain text/css application/javascript;
-gzip_min_length 1000;
+# SQLite databases
+cp data/cache.db backup/
+cp data/sessions.db backup/
 ```
-
----
-
-## Security
-
-### HTTPS/SSL
-
-- Always use HTTPS in production
-- Use Let's Encrypt for free certificates
-- Renew certificates automatically
-
-### Environment Variables
-
-- Never commit `.env` files
-- Use `.env.example` for templates
-- Rotate secrets regularly
-- Use strong passwords for databases
-
-### API Security
-
-- Consider enabling API key authentication
-- Implement rate limiting
-- Monitor for suspicious activity
-- Keep dependencies updated
-
----
-
-## Backup and Recovery
-
-### Database Backup
-
-```bash
-# SQLite backup
-cp data/cache.db backup/cache.db.backup
-cp data/sessions.db backup/sessions.db.backup
-
-# Automated backup (cron job)
-0 2 * * * /home/diogenes/backup.sh
-```
-
-### Recovery
-
-```bash
-cp backup/cache.db.backup data/cache.db
-systemctl restart diogenes-backend
-```
-
----
-
-For more help, see [docs/](docs/) or open an [issue](https://github.com/yourusername/diogenes/issues).

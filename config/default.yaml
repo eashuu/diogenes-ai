@@ -34,10 +34,24 @@ llm:
   max_tokens: 4096
   timeout: 120.0
   models:
-    planner: "qwen2.5:3b"
-    extractor: "qwen2.5:3b"
-    synthesizer: "llama3.1:8b"
-    reflector: "llama3.1:8b"
+    planner: "qwen3:8b"
+    extractor: "qwen3:8b"
+    synthesizer: "qwen3:8b"
+    reflector: "qwen3:8b"
+  # Provider-specific configs — set API keys via env vars or here
+  providers:
+    openai:
+      api_key: ""  # or DIOGENES_LLM_OPENAI_API_KEY
+      default_model: "gpt-4o-mini"
+    anthropic:
+      api_key: ""  # or DIOGENES_LLM_ANTHROPIC_API_KEY
+      default_model: "claude-sonnet-4-20250514"
+    groq:
+      api_key: ""  # or DIOGENES_LLM_GROQ_API_KEY
+      default_model: "llama-3.3-70b-versatile"
+    gemini:
+      api_key: ""  # or DIOGENES_LLM_GEMINI_API_KEY
+      default_model: "gemini-2.0-flash"
 
 processing:
   chunk_size: 512

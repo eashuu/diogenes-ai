@@ -115,6 +115,7 @@ class UpdateLLMSettingsRequest(BaseModel):
     """Request to update LLM settings."""
     provider: Optional[str] = None
     base_url: Optional[str] = None
+    api_key: Optional[str] = None
     temperature: Optional[float] = Field(None, ge=0.0, le=2.0)
     max_tokens: Optional[int] = Field(None, ge=256, le=32768)
     timeout: Optional[float] = Field(None, ge=10.0, le=600.0)
@@ -334,21 +335,39 @@ async def update_llm_settings(request: UpdateLLMSettingsRequest):
     Changes are applied immediately and persist until server restart.
     """
     updates = request.model_dump(exclude_none=True)
-    
+
     if "models" in updates:
         if "models" not in _settings_overrides["llm"]:
             _settings_overrides["llm"]["models"] = {}
         _settings_overrides["llm"]["models"].update(updates["models"])
         del updates["models"]
-    
+
+    # Handle API key: store it in provider-specific config, not in top-level llm
+    api_key = updates.pop("api_key", None)
+    if api_key and request.provider and request.provider != "ollama":
+        provider_name = request.provider
+        # Set as environment variable so the registry picks it up
+        import os
+        env_key = f"DIOGENES_LLM_{provider_name.upper()}_API_KEY"
+        os.environ[env_key] = api_key
+        # Also update providers override
+        providers_override = _settings_overrides["llm"].get("providers", {})
+        if provider_name not in providers_override:
+            providers_override[provider_name] = {}
+        providers_override[provider_name]["api_key"] = api_key
+        _settings_overrides["llm"]["providers"] = providers_override
+        # Clear cached provider instances so new key takes effect
+        from src.services.llm.registry import clear_provider_cache
+        clear_provider_cache()
+
     _settings_overrides["llm"].update(updates)
 
     # Propagate to global config so all code sees the change
     all_llm = dict(_settings_overrides["llm"])
     apply_runtime_overrides("llm", all_llm)
-    
-    logger.info(f"Updated LLM settings: {updates}")
-    
+
+    logger.info(f"Updated LLM settings: {list(request.model_dump(exclude_none=True).keys())}")
+
     return {"status": "updated", "updated_fields": list(request.model_dump(exclude_none=True).keys())}
 
 

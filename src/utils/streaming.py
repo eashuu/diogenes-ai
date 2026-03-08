@@ -160,6 +160,38 @@ class SSEStream:
         """Emit completion event and close stream."""
         await self.emit("done", metadata)
         await self.close()
+
+    # ------------------------------------------------------------------
+    # Structured message block helpers (Perplexica-compatible)
+    # ------------------------------------------------------------------
+
+    async def emit_message_start(self, message_id: str) -> None:
+        """Signal the start of a structured message."""
+        await self.emit("messageStart", {"messageId": message_id})
+
+    async def emit_message_end(self, message_id: str) -> None:
+        """Signal the end of a structured message."""
+        await self.emit("messageEnd", {"messageId": message_id})
+
+    async def emit_text_chunk(self, text: str) -> None:
+        """Emit a text chunk within a message block."""
+        await self.emit("textChunk", {"text": text}, include_id=False)
+
+    async def emit_source_block(self, sources: list[dict]) -> None:
+        """Emit a source/reference block."""
+        await self.emit("sourceBlock", {"sources": sources})
+
+    async def emit_citation_block(self, citations: list[dict]) -> None:
+        """Emit an inline citation mapping block."""
+        await self.emit("citationBlock", {"citations": citations})
+
+    async def emit_image_block(self, images: list[dict]) -> None:
+        """Emit an image result block."""
+        await self.emit("imageBlock", {"images": images})
+
+    async def emit_widget_block(self, widget_type: str, data: dict) -> None:
+        """Emit a widget block (weather, calculator, stocks etc.)."""
+        await self.emit("widgetBlock", {"type": widget_type, **data})
     
     async def close(self, error: Optional[Exception] = None) -> None:
         """Close the stream."""

@@ -16,7 +16,8 @@ from src.core.agents.protocol import (
     TaskResult,
     TaskType,
 )
-from src.services.llm.ollama import OllamaService
+from src.services.llm.base import LLMService
+from src.services.llm.registry import get_llm_service
 from src.config import get_settings
 
 
@@ -123,13 +124,13 @@ class SuggestionAgent(BaseAgent):
         settings = get_settings()
         # Use planner model for suggestions (fast model for non-quality-critical tasks)
         self.model = model or settings.llm.models.planner
-        self._llm_service: Optional[OllamaService] = None
+        self._llm_service: Optional[LLMService] = None
     
     @property
-    def llm_service(self) -> OllamaService:
+    def llm_service(self) -> LLMService:
         """Lazy-load LLM service."""
         if self._llm_service is None:
-            self._llm_service = OllamaService()
+            self._llm_service = get_llm_service()
         return self._llm_service
     
     async def execute(self, task: TaskAssignment) -> TaskResult:

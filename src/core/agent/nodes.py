@@ -22,7 +22,8 @@ from src.utils.exceptions import (
 from src.services.search.searxng import SearXNGService
 from src.services.search.models import SearchQuery
 from src.services.crawl.crawler import Crawl4AIService
-from src.services.llm.ollama import OllamaService
+from src.services.llm.base import LLMService
+from src.services.llm.registry import get_llm_service
 from src.processing.cleaner import ContentCleaner
 from src.processing.chunker import SmartChunker
 from src.processing.scorer import QualityScorer
@@ -107,12 +108,10 @@ class NodeServices:
         return self._crawl_service
     
     @property
-    def llm_service(self) -> OllamaService:
+    def llm_service(self) -> LLMService:
         if self._llm_service is None:
-            self._llm_service = OllamaService(
-                base_url=self.settings.llm.base_url,
-                default_model=self.settings.llm.models.synthesizer,
-                timeout=self.settings.llm.timeout
+            self._llm_service = get_llm_service(
+                model=self.settings.llm.models.synthesizer,
             )
         return self._llm_service
     

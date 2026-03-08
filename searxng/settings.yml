@@ -1,8 +1,8 @@
 use_default_settings: true
 
 server:
-  # Secret key (changed from default for security)
-  secret_key: "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+  # Secret key — override with SEARXNG_SECRET env var in production
+  secret_key: "change-me-in-production-use-a-random-string"
   # Bind to 0.0.0.0 inside the container so it's accessible from the host
   bind_address: "0.0.0.0:8080"
 
@@ -10,3 +10,123 @@ search:
   formats:
     - html
     - json
+  default_lang: "en"
+
+engines:
+  # General search
+  - name: google
+    engine: google
+    shortcut: g
+    disabled: false
+
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: false
+
+  - name: brave
+    engine: brave
+    shortcut: br
+    disabled: false
+
+  - name: bing
+    engine: bing
+    shortcut: bi
+    disabled: false
+
+  # Academic / scholarly
+  - name: google scholar
+    engine: google_scholar
+    shortcut: gs
+    disabled: false
+    categories: science
+
+  - name: arxiv
+    engine: arxiv
+    shortcut: ar
+    disabled: false
+    categories: science
+
+  - name: semantic scholar
+    engine: semantic_scholar
+    shortcut: ss
+    disabled: false
+    categories: science
+
+  - name: pubmed
+    engine: pubmed
+    shortcut: pm
+    disabled: false
+    categories: science
+
+  # News
+  - name: google news
+    engine: google_news
+    shortcut: gn
+    disabled: false
+    categories: news
+
+  - name: bing news
+    engine: bing_news
+    shortcut: bn
+    disabled: false
+    categories: news
+
+  # Images
+  - name: google images
+    engine: google_images
+    shortcut: gi
+    disabled: false
+    categories: images
+
+  - name: bing images
+    engine: bing_images
+    shortcut: bii
+    disabled: false
+    categories: images
+
+  # Videos
+  - name: google videos
+    engine: google_videos
+    shortcut: gv
+    disabled: false
+    categories: videos
+
+  - name: bing videos
+    engine: bing_videos
+    shortcut: bv
+    disabled: false
+    categories: videos
+
+  - name: youtube
+    engine: youtube_noapi
+    shortcut: yt
+    disabled: false
+    categories: videos
+
+  # Discussion / Social
+  - name: reddit
+    engine: reddit
+    shortcut: re
+    disabled: false
+    categories: social media
+
+  - name: stackoverflow
+    engine: stackoverflow
+    shortcut: so
+    disabled: true
+    categories: it
+
+  # IT / Code
+  - name: github
+    engine: github
+    shortcut: gh
+    disabled: false
+    categories: it
+
+  # Wikipedia / Reference
+  - name: wikipedia
+    engine: wikipedia
+    shortcut: wp
+    disabled: false
+    categories: general

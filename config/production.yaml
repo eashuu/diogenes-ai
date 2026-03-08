@@ -6,17 +6,16 @@ environment: "production"
 api:
   debug: false
   cors_origins:
-    - "https://your-domain.com"
+    - "http://localhost:3000"
+    - "http://localhost:5173"
+    - "http://127.0.0.1:5173"
 
 logging:
   level: "INFO"
   file: "logs/diogenes.log"
 
-# Use larger models in production for better quality
+# Models — override via DIOGENES_LLM_MODELS_* env vars or default.yaml
 llm:
-  models:
-    synthesizer: "llama3.1:70b"
-    reflector: "llama3.1:70b"
   timeout: 180.0
 
 # Longer cache TTLs for production

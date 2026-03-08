@@ -1,202 +1,56 @@
-# ✅ Diogenes Startup Checklist
+# Startup Checklist
 
-Use this checklist to ensure all required services are running before using Diogenes.
+Start services in this order:
 
-## Required Services Checklist
-
-### ☑️ 1. SearXNG (Search Engine) - **MUST BE RUNNING**
+## 1. SearXNG (Required)
 
 ```powershell
-# Start SearXNG (first build takes 2-3 minutes)
-docker-compose up -d --build searxng
-
-# Verify (should return HTML page)
-curl http://localhost:8080/
+docker-compose up -d searxng
+curl http://localhost:8080/          # Should return HTML
 ```
 
-**Status:** ⬜ Not running  ✅ Running on port 8080
+## 2. LLM Provider
 
-**Critical:** Backend will fail without SearXNG!
-
-**Note:** The `--build` flag ensures your custom settings.yml is used.
-
----
-
-### ☑️ 2. Ollama (LLM) - **Recommended**
-
+**Ollama (local):**
 ```powershell
-# Start Ollama
 ollama serve
-
-# Pull required models
-ollama pull qwen2.5:3b
 ollama pull llama3.1:8b
-
-# Verify
-curl http://localhost:11434/
 ```
 
-**Status:** ⬜ Not running  ✅ Running on port 11434
+**Or set a cloud provider key in `.env`:** `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GROQ_API_KEY`, or `GOOGLE_API_KEY`.
 
----
-
-### ☑️ 3. Backend API
+## 3. Backend API
 
 ```powershell
-# Start backend
 python run_api.py
-
-# Verify
-curl http://localhost:8000/health/
+curl http://localhost:8000/health/   # Should return JSON
 ```
 
-**Status:** ⬜ Not running  ✅ Running on port 8000
-
----
-
-### ☑️ 4. Frontend
+## 4. Frontend
 
 ```powershell
-# Start frontend
-cd frontend
-npm run dev
-
-# Browser opens automatically or visit:
-# http://localhost:3000
+cd frontend && npm run dev
 ```
 
-**Status:** ⬜ Not running  ✅ Running on port 3000
+Open http://localhost:3000
 
----
-
-## Quick Verification Commands
+## Quick Health Check
 
 ```powershell
-# Check all services at once
-Write-Host "Checking services..." -ForegroundColor Cyan
-
-# SearXNG (REQUIRED)
-try {
-    $response = Invoke-WebRequest -Uri "http://localhost:8080/" -UseBasicParsing -TimeoutSec 2
-    Write-Host "✅ SearXNG: Running" -ForegroundColor Green
-} catch {
-    Write-Host "❌ SearXNG: NOT RUNNING (REQUIRED!)" -ForegroundColor Red
-}
-
-# Ollama
-try {
-    $response = Invoke-WebRequest -Uri "http://localhost:11434/" -UseBasicParsing -TimeoutSec 2
-    Write-Host "✅ Ollama: Running" -ForegroundColor Green
-} catch {
-    Write-Host "⚠️  Ollama: Not running (recommended)" -ForegroundColor Yellow
-}
-
-# Backend API
-try {
-    $response = Invoke-WebRequest -Uri "http://localhost:8000/health/" -UseBasicParsing -TimeoutSec 2
-    Write-Host "✅ Backend API: Running" -ForegroundColor Green
-} catch {
-    Write-Host "❌ Backend API: Not running" -ForegroundColor Red
-}
-
-# Frontend
-try {
-    $response = Invoke-WebRequest -Uri "http://localhost:3000/" -UseBasicParsing -TimeoutSec 2
-    Write-Host "✅ Frontend: Running" -ForegroundColor Green
-} catch {
-    Write-Host "❌ Frontend: Not running" -ForegroundColor Red
-}
+.\check-services.ps1
 ```
 
-Save this as `check-services.ps1` and run it anytime!
+## Ports
+
+| Service | Port |
+|---------|------|
+| Frontend | 3000 |
+| Backend API | 8000 |
+| SearXNG | 8080 |
+| Ollama | 11434 |
 
 ---
 
-## Common Issues
-
-### ❌ Backend fails with "Search service unavailable"
-
-**Problem:** SearXNG is not running
-
-**Solution:**
-```powershell
-docker-compose up -d --build searxng
-# Wait 5 seconds for startup (first build takes longer)
-Start-Sleep -Seconds 5
-# Verify
-curl http://localhost:8080/
-```
-
-**Tip:** First time running? The Docker build takes 2-3 minutes. Be patient!
-
-### ❌ "Cannot connect to LLM"
-
-**Problem:** Ollama is not running or models not downloaded
-
-**Solution:**
-```powershell
-# Start Ollama
-ollama serve
-
-# In another terminal, pull models
-ollama pull qwen2.5:3b
-ollama pull llama3.1:8b
-```
-
-### ❌ Frontend can't connect to backend
-
-**Problem:** Backend not running or wrong URL
-
-**Solution:**
-1. Check backend is running: `curl http://localhost:8000/health/`
-2. Check frontend `.env.local` has: `VITE_API_URL=http://localhost:8000/api`
-
----
-
-## Startup Order (Important!)
-
-**Correct order:**
-
-1. **SearXNG** (via docker-compose) ← START FIRST!
-2. **Ollama** (if using local LLM)
-3. **Backend API** (depends on SearXNG + Ollama)
-4. **Frontend** (depends on Backend)
-
-**Wrong order = errors!**
-
----
-
-## Docker Compose All-in-One
-
-# First time: builds SearXNG image (2-3 minutes)
-docker-compose up -d --build
-
-# Check they're running
-docker-compose ps
-
-# View logs
-docker-compose logs -f searxng
-```
-
-Then start backend and frontend manually.
-
-### Rebuilding After Config Changes
-
-```powershell
-# After modifying searxng/settings.yml
-docker-compose up -d --build searxng
-```
-
-Then start backend and frontend manually.
-
----
-
-## Need Help?
-
-- 📖 See [STARTUP_GUIDE.md](STARTUP_GUIDE.md) for detailed instructions
-- 🐛 See [../troubleshooting/](../troubleshooting/) for error solutions
-- 💬 Open an issue on GitHub
-
----
+For detailed setup instructions, see [STARTUP_GUIDE.md](STARTUP_GUIDE.md).
 
 **Pro Tip:** Create a workspace with 4 terminal windows, one for each service!
